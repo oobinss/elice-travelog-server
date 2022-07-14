@@ -1,0 +1,49 @@
+{
+  /*
+    ESLint 설정시 여러 개의 설정 파일을 사용할 수 있습니다. 
+    대상 파일이 위치한 폴더 안에 설정 파일이 있는지 우선적으로 확인해보고 없으면 
+    그 상위 폴더를 한 단계 씩 거슬러 올라가면서 설정 파일을 찾게됩니다. 
+    root 옵션이 true로 설정되어 있는 설정 파일을 만나면 더 이상 상위 폴더로 올라가지 않습니다.
+    파일이 하나만 있어도 혹여 상위 폴더에 있는 파일에 영향을 받는 일이 없도록 
+    root 옵션을 true로 설정하는 경우가 많습니다.
+  */
+  "root": true,
+
+  /*
+    미리 선언하지 않고 접근하는 변수에 대해서는 오류를 내기 때문에 
+    이렇게 각 실행 환경에서 기본적으로 제공되는 전역 객체에 대해서 설정을 통해 알려줘야 합니다. 
+  */
+  "env": {
+    // 브라우저의 document와 같은 객체 사용 여부
+    "browser": false,
+    // node.js에서 console과 같은 전역변수 사용 여부
+    "node": true
+  },
+
+  // 코드 포맷을 prettier로 설정
+  "plugins": ["prettier"],
+
+  // eslint의 룰을 기본 권장설정으로 설정
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+
+  // 코드를 해석하는 parser에 대한 설정
+  "parserOptions": {
+    // 자바스크립트 버전, 7은 ECMA2016
+    "ecmaVersion": 7,
+    // 모듈 export를 위해 import, export를 사용 가능여부를 설정, script는 사용불가
+    "sourceType": "module",
+    // jsx 허용을 설정, back-end 설정이기 때문에 사용 안함
+    "ecmaFeatures": {
+      "jsx": false
+    }
+  },
+
+  // ESLint가 무시할 디렉토리, 파일을 설정
+  "ignorePatterns": ["node_modules/"],
+
+  // ESLint 룰을 설정
+  "rules": {
+    // prettier에 맞게 룰을 설정
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+  }
+}
