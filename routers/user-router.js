@@ -3,7 +3,6 @@ import is from '@sindresorhus/is';
 // 폴더에서 import하면, 자동으로 폴더의 index.js에서 가져옴
 import { loginRequired } from '../middlewares/index.js';
 import passport from 'passport';
-// import { auth } from '../middlewares/auth.js';
 import { userService } from '../services/index.js';
 
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -13,16 +12,6 @@ import jwt from 'jsonwebtoken';
 import { userModel } from '../db/models/user-model.js';
 
 const userRouter = Router();
-
-userRouter.get('/useruser', async (req, res, next) => {
-  try {
-    const getUsers = await userModel.findAll();
-    console.log(getUsers);
-    res.status(201).json(getUsers);
-  } catch (error) {
-    next(error);
-  }
-});
 
 // 회원가입 api (실제요청경로 /api/users/register)
 userRouter.post('/register', async (req, res, next) => {
@@ -164,16 +153,30 @@ userRouter.post(
   }
 );
 
-// 전체 유저 목록을 가져옴 (배열 형태임)
+/**
+ * @swagger
+ *  /api/users:
+ *    get:
+ *      tags:
+ *      - user
+ *      description: 모든 유저 조회 (배열)
+ *      produces:
+ *      - application/json
+ *      responses:
+ *       '200':
+ *          description: 유저 목록 조회 성공
+ *          schema:
+ *            $ref: './swagger/user.yaml#/components/schemas/User'
+ */
 // 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
-userRouter.get('/', loginRequired, async function (req, res, next) {
+userRouter.get('/', async (req, res, next) => {
   try {
     // 전체 사용자 목록을 얻음
-    const userRole = await req.currentUserRole;
-    if (userRole !== 'admin') {
-      console.log(`${userRole}의  회원목록조회 요청이 거부됨`);
-      throw new Error('권한이 없습니다.');
-    }
+    // const userRole = await req.currentUserRole;
+    // if (userRole !== 'admin') {
+    //   console.log(`${userRole}의  회원목록조회 요청이 거부됨`);
+    //   throw new Error('권한이 없습니다.');
+    // }
     const users = await userService.getUsers();
 
     // 사용자 목록(배열)을 JSON 형태로 프론트에 보냄

@@ -9,6 +9,8 @@ import {
   boardRouter,
 } from './routers/index.js';
 import { errorHandler } from './middlewares/index.js';
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './swagger.js';
 
 const app = express();
 
@@ -23,6 +25,9 @@ app.use(express.json());
 
 // Content-Type: application/x-www-form-urlencoded 형태의 데이터를 인식하고 핸들링할 수 있게 함.
 app.use(express.urlencoded({ extended: false }));
+
+// Swagger (router 이전에 위치)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // api 라우팅
 // 아래처럼 하면, userRouter 에서 '/login' 으로 만든 것이 실제로는 앞에 /api가 붙어서

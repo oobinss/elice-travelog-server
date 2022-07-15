@@ -10,11 +10,22 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class UserModel {
+  //prisma//////////////////////////////////////////////////
+  async findAll() {
+    const users = await prisma.User.findMany();
+    return users;
+  }
+
   async findByEmail(email) {
-    const user = await User.findOne({ email });
+    const user = await prisma.User.findUnique({
+      where: {
+        email: email,
+      },
+    });
     return user;
   }
 
+  //mongoDB//////////////////////////////////////////////////
   async findById(userId) {
     const user = await User.findOne({ _id: userId });
     return user;
@@ -23,11 +34,6 @@ export class UserModel {
   async create(userInfo) {
     const createdNewUser = await User.create(userInfo);
     return createdNewUser;
-  }
-
-  async findAll() {
-    const users = await prisma.User.findMany();
-    return users;
   }
 
   async update({ userId, update }) {

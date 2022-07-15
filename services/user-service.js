@@ -11,7 +11,7 @@ class UserService {
   // 회원가입
   async addUser(userInfo) {
     // 객체 destructuring
-    const { email, fullName, password } = userInfo;
+    const { email, password, name, nickname, address, role, age } = userInfo;
 
     // 이메일 중복 확인
     const user = await this.userModel.findByEmail(email);
