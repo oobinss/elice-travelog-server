@@ -39,10 +39,12 @@
   },
 
   // ESLint가 무시할 디렉토리, 파일을 설정
-  "ignorePatterns": ["node_modules/"],
+  "ignorePatterns": ["node_modules/", ".env"],
 
   // ESLint 룰을 설정
   "rules": {
+    "no-var": "warn", // var 금지
+
     // prettier에 맞게 룰을 설정
     "prettier/prettier": ["error", { "endOfLine": "auto" }]
   }

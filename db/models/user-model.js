@@ -1,9 +1,13 @@
-import mongoose from 'mongoose';
-const { model } = mongoose;
+// import mongoose from 'mongoose';
+// const { model } = mongoose;
 
-import { UserSchema } from '../schemas/user-schema.js';
+// import { UserSchema } from '../schemas/user-schema.js';
 
-const User = model('users', UserSchema);
+// const User = model('users', UserSchema);
+
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export class UserModel {
   async findByEmail(email) {
@@ -22,7 +26,7 @@ export class UserModel {
   }
 
   async findAll() {
-    const users = await User.find({});
+    const users = await prisma.User.findMany();
     return users;
   }
 

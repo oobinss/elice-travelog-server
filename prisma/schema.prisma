@@ -1,0 +1,46 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_UPLOAD_SCHEMA_URL")
+  
+  // 추가
+//   referentialIntegrity = "prisma" 
+}
+
+generator client {
+  provider = "prisma-client-js"
+
+  // 추가
+//   previewFeatures = ["referentialIntegrity"] 
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String
+  password String?
+  name     String?
+  nickname String
+  address  String?
+  role     String
+  age      Int
+  createAt DateTime? @default(now())
+  updateAt DateTime? @updatedAt
+
+  Profile  Profile?
+  Post     Post?
+}
+
+model Profile {
+  id       Int      @id @default(autoincrement())
+  bio      String?
+  userId   Int      @unique
+  User     User     @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id       Int      @id @default(autoincrement())
+  title    String
+  content  String
+
+  userId   Int      @unique
+  User     User     @relation(fields: [userId], references: [id])
+}

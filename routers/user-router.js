@@ -14,6 +14,16 @@ import { userModel } from '../db/models/user-model.js';
 
 const userRouter = Router();
 
+userRouter.get('/useruser', async (req, res, next) => {
+  try {
+    const getUsers = await userModel.findAll();
+    console.log(getUsers);
+    res.status(201).json(getUsers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // 회원가입 api (실제요청경로 /api/users/register)
 userRouter.post('/register', async (req, res, next) => {
   try {
