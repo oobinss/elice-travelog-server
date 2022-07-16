@@ -7,7 +7,7 @@ const options = {
       version: '1.0.0',
       description: 'User API with express',
     },
-    // host: 'localhost:8000',
+    host: 'localhost:8000',
     // basePath: '/api',
   },
   apis: ['./routers/*.js', './swagger/*'],

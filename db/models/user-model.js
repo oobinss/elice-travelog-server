@@ -1,16 +1,9 @@
-// import mongoose from 'mongoose';
-// const { model } = mongoose;
-
-// import { UserSchema } from '../schemas/user-schema.js';
-
-// const User = model('users', UserSchema);
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export class UserModel {
-  //prisma//////////////////////////////////////////////////
+  //mysql-prismaORM//////////////////////////////////////////////////
   async findAll() {
     const users = await prisma.User.findMany();
     return users;
@@ -25,15 +18,17 @@ export class UserModel {
     return user;
   }
 
+  async create(userInfo) {
+    const createdNewUser = await prisma.User.create({
+      data: userInfo,
+    });
+    return createdNewUser;
+  }
+
   //mongoDB//////////////////////////////////////////////////
   async findById(userId) {
     const user = await User.findOne({ _id: userId });
     return user;
-  }
-
-  async create(userInfo) {
-    const createdNewUser = await User.create(userInfo);
-    return createdNewUser;
   }
 
   async update({ userId, update }) {
