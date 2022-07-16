@@ -25,7 +25,15 @@ class UserService {
     // 우선 비밀번호 해쉬화(암호화)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUserInfo = { fullName, email, password: hashedPassword };
+    const newUserInfo = {
+      email,
+      password: hashedPassword,
+      name,
+      nickname,
+      address,
+      role,
+      age,
+    };
 
     // db에 저장
     const createdNewUser = await this.userModel.create(newUserInfo);
