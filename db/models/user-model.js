@@ -25,12 +25,14 @@ export class UserModel {
     return createdNewUser;
   }
 
-  //mongoDB//////////////////////////////////////////////////
   async findById(userId) {
-    const user = await User.findOne({ _id: userId });
+    const user = await prisma.User.findUnique({
+      where: { id: userId },
+    });
     return user;
   }
 
+  //mongoDB//////////////////////////////////////////////////
   async update({ userId, update }) {
     const filter = { _id: userId };
     const option = { returnOriginal: false };

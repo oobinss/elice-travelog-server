@@ -17,7 +17,10 @@ const app = express();
 // CORS 에러 방지
 app.use(cors());
 
+/*
+// passport.js LocalStrategy 사용하는 경우 (+session)
 app.use(session({ secret: process.env.COOKIE_SECRET }));
+*/
 
 // Content-Type: application/json 형태의 데이터를 인식하고 핸들링할 수 있게 함.
 // body-parser가 내장되어 있음
