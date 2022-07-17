@@ -11,8 +11,8 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
   done(null, id);
 });
-
-// LocalStrategy
+/*
+// passport.js LocalStrategy 사용하는 경우 (+session)
 passport.use(
   'local',
   new LocalStrategy(
@@ -46,7 +46,7 @@ passport.use(
     }
   )
 );
-
+*/
 // JwtStrategy
 passport.use(
   new JwtStrategy(
@@ -60,7 +60,7 @@ passport.use(
     async function (jwtPayload, done) {
       try {
         console.log(jwtPayload);
-        const user = await userModel.findByEmail(jwtPayload.userId);
+        const user = await userModel.findById(jwtPayload.userId);
 
         // user가 있을 경우
         if (user) {

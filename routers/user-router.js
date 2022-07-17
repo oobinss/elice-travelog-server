@@ -76,34 +76,20 @@ userRouter.post('/register', async (req, res, next) => {
  *       '200':
  *          description: 유저 로그인 성공
  */
-/*
- import { userModel } from '../db/models/user-model.js';
+userRouter.post('/', async function (req, res, next) {
+  try {
+    const token = await userService.getUserToken(req.body);
 
- userRouter.post(
-   '/',
-   // passport.authenticate('local'),
-   async function (req, res, next) {
-     try {
-       // email check
-       const { email } = req.body;
-       console.log(email);
-       const user = await userModel.findByEmail(email);
-       // 로그인 성공 -> JWT 웹 토큰 생성
-       const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
- 
-       // 2개 프로퍼티를 jwt 토큰에 담음 (이메일과 이메일서명)
-       const userId = email;
-       const token = jwt.sign({ userId: userId }, secretKey);
- 
-       // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
-       // res.status(200).json({ userId, token });
-       res.status(200).json({ token });
-     } catch (error) {
-       console.log(error);
-     }
-   }
- );
- */
+    // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
+    // res.status(200).json({ userId, token });
+    res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+/*
+// passport.js LocalStrategy 사용하는 경우 (+session)
 userRouter.post(
   '/',
   passport.authenticate('local'),
@@ -124,6 +110,7 @@ userRouter.post(
     }
   }
 );
+*/
 
 /**
  * @swagger
