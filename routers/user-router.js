@@ -1,15 +1,12 @@
 import { Router } from 'express';
 import is from '@sindresorhus/is';
 // 폴더에서 import하면, 자동으로 폴더의 index.js에서 가져옴
-import { loginRequired } from '../middlewares/index.js';
+// import { loginRequired } from '../middlewares/index.js';
 import passport from 'passport';
 import { userService } from '../services/index.js';
 
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import bcrypt from 'bcrypt';
+import passportStrategies from '../middlewares/auth.js';
 import jwt from 'jsonwebtoken';
-import { userModel } from '../db/models/user-model.js';
 
 const userRouter = Router();
 
@@ -31,7 +28,6 @@ const userRouter = Router();
  *       '200':
  *          description: 유저 등록 성공
  */
-// 회원가입 api (실제요청경로 /api/users/register)
 userRouter.post('/register', async (req, res, next) => {
   try {
     // Content-Type: application/json 설정을 안 한 경우, 에러를 만들도록 함.
@@ -50,7 +46,8 @@ userRouter.post('/register', async (req, res, next) => {
       name,
       nickname,
       address,
-      ...(role || { role: 'user' }),
+      role,
+      // ...(role || { role: 'user' }),
       age,
     });
 
@@ -61,105 +58,52 @@ userRouter.post('/register', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ *  /api/users:
+ *    post:
+ *      tags:
+ *      - user
+ *      description: 유저 로그인 (토큰 발급)
+ *      produces:
+ *      - application/json
+ *      requestBody:
+ *        content:
+ *          application/x-www-form-urlencoded:
+ *            schema:
+ *              $ref: 'swagger/user.yaml#/components/schemas/User'
+ *      responses:
+ *       '200':
+ *          description: 유저 로그인 성공
+ */
 /*
-// 로그인 api (아래는 / 이지만, 실제로는 /api/users 요청해야 함.)
-userRouter.post(
-  '/',
-  // authenticate 성공시유저아이디와 토큰발급해 프론트로 반환
-  async function (req, res, next) {
-    try {
-      // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-      if (is.emptyObject(req.body)) {
-        throw new Error(
-          'headers의 Content-Type을 application/json으로 설정해주세요'
-        );
-      }
+ import { userModel } from '../db/models/user-model.js';
 
-      const { email, password } = req.body;
-      const token = await userService.getUserToken({ email, password });
-      const userId = await userService.getUserId(email);
-
-      // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
-      res.status(200).json({ userId, token });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-*/
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function (id, done) {
-  userModel.findByEmail(id, function (err, user) {
-    done(err, user);
-  });
-});
-
-// 토큰 생성
-const jwtOptions = {
-  // header에 bearer스키마에 담겨온 토큰 해석할 것
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  // 해당 복호화 방법사용
-  secretOrKey: process.env.JWT_SECRET_KEY,
-};
-
-const verifyUser = async (payload, done) => {
-  console.log('payload', payload);
-  try {
-    // const user = await prisma.user({ id: payload.id });
-    const user = await userModel.findByEmail({ email: payload.email });
-
-    // user가 있을 경우
-    if (user) {
-      return done(null, user);
-    } else {
-      return done(null, false);
-    }
-  } catch (error) {
-    return done(error, false);
-  }
-};
-
-// 두번째 인자: verifyUser라는 복호화 성공시 호출할 함수
-passport.use(new JwtStrategy(jwtOptions, verifyUser));
-passport.initialize();
-
-// passport 로그인 정보 확인 (+ 토큰발급해줘야함)
-passport.use(
-  'local',
-  new LocalStrategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-      session: false,
-    },
-    async function (username, password, done) {
-      try {
-        console.log('LocalStrategy', username, password);
-
-        // email check
-        const user = await userModel.findByEmail(username);
-
-        if (!user) {
-          return done(null, false, { message: `존재하지 않는 사용자입니다.` });
-        }
-
-        // password check
-        const compareResult = await bcrypt.compare(password, user.password);
-        if (compareResult) {
-          return done(null, user);
-        }
-        return done(null, false, { reason: '올바르지 않은 비밀번호 입니다.' });
-      } catch (e) {
-        console.log(e);
-        done(e);
-      }
-    }
-  )
-);
-
+ userRouter.post(
+   '/',
+   // passport.authenticate('local'),
+   async function (req, res, next) {
+     try {
+       // email check
+       const { email } = req.body;
+       console.log(email);
+       const user = await userModel.findByEmail(email);
+       // 로그인 성공 -> JWT 웹 토큰 생성
+       const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
+ 
+       // 2개 프로퍼티를 jwt 토큰에 담음 (이메일과 이메일서명)
+       const userId = email;
+       const token = jwt.sign({ userId: userId }, secretKey);
+ 
+       // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
+       // res.status(200).json({ userId, token });
+       res.status(200).json({ token });
+     } catch (error) {
+       console.log(error);
+     }
+   }
+ );
+ */
 userRouter.post(
   '/',
   passport.authenticate('local'),
@@ -168,12 +112,13 @@ userRouter.post(
       // 로그인 성공 -> JWT 웹 토큰 생성
       const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
 
-      // 2개 프로퍼티를 jwt 토큰에 담음
+      // 2개 프로퍼티를 jwt 토큰에 담음 (이메일과 이메일서명)
       const userId = req.user.email;
       const token = jwt.sign({ userId: userId }, secretKey);
 
       // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
-      res.status(200).json({ userId, token });
+      // res.status(200).json({ userId, token });
+      res.status(200).json({ token });
     } catch (error) {
       console.log(error);
     }
@@ -200,7 +145,8 @@ userRouter.post(
 // 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
 userRouter.get(
   '/',
-  /*loginRequired,*/ async (req, res, next) => {
+  passport.authenticate('jwt', { session: false }),
+  async function (req, res, next) {
     try {
       // 전체 사용자 목록을 얻음
       // const userRole = await req.currentUserRole;
