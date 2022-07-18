@@ -14,33 +14,34 @@ generator client {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String?  // 소셜 로그인은 비밀번호를 받지않는다.
-  name     String?  // 소셜 로그인은 이름을 받지않는다.
-  nickname String
-  address  String?  // 소셜 로그인은 주소를 받지않는다.
-  role     String   @default("user")
-  age      Int
-  createAt DateTime? @default(now())
-  updateAt DateTime? @updatedAt
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  password    String?   // 소셜 로그인은 비밀번호를 받지않는다.
+  name        String?   // 소셜 로그인은 이름을 받지않는다.
+  nickname    String
+  phoneNumber String?      
+  address     String?   // 소셜 로그인은 주소를 받지않는다.
+  role        String    @default("user")
+  age         Int
+  createAt    DateTime? @default(now())
+  updateAt    DateTime? @updatedAt
 
   Profile  Profile?
   Post     Post?
 }
 
 model Profile {
-  id       Int      @id @default(autoincrement())
-  bio      String?
-  userId   Int      @unique
-  User     User     @relation(fields: [userId], references: [id])
+  id          Int       @id @default(autoincrement())
+  bio         String?
+  userId      Int       @unique
+  User        User      @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id       Int      @id @default(autoincrement())
-  title    String
-  content  String
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
 
-  userId   Int      @unique
-  User     User     @relation(fields: [userId], references: [id])
+  userId      Int       @unique
+  User        User      @relation(fields: [userId], references: [id])
 }
