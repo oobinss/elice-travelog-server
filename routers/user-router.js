@@ -4,9 +4,9 @@ import is from '@sindresorhus/is';
 // import { loginRequired } from '../middlewares/index.js';
 import passport from 'passport';
 import { userService } from '../services/index.js';
-
-import passportStrategies from '../middlewares/auth.js';
 import jwt from 'jsonwebtoken';
+
+import { userController } from '../controller/user-controller.js';
 
 const userRouter = Router();
 
@@ -29,33 +29,7 @@ const userRouter = Router();
  *          description: 유저 등록 성공
  */
 userRouter.post('/register', async (req, res, next) => {
-  try {
-    // Content-Type: application/json 설정을 안 한 경우, 에러를 만들도록 함.
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      throw new Error(
-        'headers의 Content-Type을 application/json으로 설정해주세요'
-      );
-    }
-    const { email, password, name, nickname, address, role, age } = req.body;
-
-    // 없으면 default값 지정
-    const newUser = await userService.addUser({
-      email,
-      password,
-      name,
-      nickname,
-      address,
-      role,
-      // ...(role || { role: 'user' }),
-      age,
-    });
-
-    // 추가된 유저의 db 데이터를 프론트에 다시 보내줌 (프론트에서 안 쓸 수 있지만, 편의상 보냄)
-    res.status(201).json(newUser);
-  } catch (error) {
-    next(error);
-  }
+  userController.addUser(req, res, next);
 });
 
 /**
