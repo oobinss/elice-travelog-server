@@ -18,11 +18,11 @@ model User {
   email       String    @unique
   password    String?   // 소셜 로그인은 비밀번호를 받지않는다.
   name        String?   // 소셜 로그인은 이름을 받지않는다.
-  nickname    String
+  nickname    String?
   phoneNumber String?      
   address     String?   // 소셜 로그인은 주소를 받지않는다.
   role        String    @default("user")
-  age         Int
+  age         Int?
   createAt    DateTime? @default(now())
   updateAt    DateTime? @updatedAt
 

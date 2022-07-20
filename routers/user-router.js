@@ -55,7 +55,7 @@ userRouter.post('/', async function (req, res, next) {
   userController.userLogin(req, res, next);
 });
 /*
-// passport.js LocalStrategy 사용하는 경우 (+session)
+// passport.js LocalStrategy 사용하는 경우 (+session), 현재 사용하진 않으나 기록용으로 두는 중, 프로젝트 업로드시 삭제
 userRouter.post(
   '/',
   passport.authenticate('local'),
@@ -80,6 +80,23 @@ userRouter.post(
 
 /**
  * @swagger
+ *  /api/users/kakao:
+ *    get:
+ *      tags:
+ *      - user
+ *      description: kakao 소셜 로그인 (토큰받아서 토큰 반환)
+ *      produces:
+ *      - application/json
+ *      responses:
+ *       '200':
+ *          description: 유저 소셜 로그인
+ */
+userRouter.get('/kakao', async function (req, res, next) {
+  userController.socialLogin(req, res, next);
+});
+
+/**
+ * @swagger
  *  /api/users:
  *    get:
  *      tags:
@@ -95,9 +112,9 @@ userRouter.post(
  *          schema:
  *            $ref: './swagger/user.yaml#/components/schemas/User'
  */
-// 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
 userRouter.get(
   '/',
+  // user jwt-token check
   passport.authenticate('jwt', { session: false }),
   async function (req, res, next) {
     userController.getUsers(req, res, next);
@@ -161,7 +178,8 @@ userRouter.delete(
 // 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
 userRouter.get(
   '/:userId',
-  /*loginRequired,*/ async function (req, res, next) {
+  passport.authenticate('jwt', { session: false }),
+  async function (req, res, next) {
     try {
       const userId = req.params.userId;
       const users = await userService.getUserInfo(userId);
