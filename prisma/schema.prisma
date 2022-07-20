@@ -1,47 +1,66 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_UPLOAD_SCHEMA_URL")
-  
-  // 다른 객체에 연결될 때 그 객체가 존재하길 바란다는 뜻
-  referentialIntegrity = "prisma" 
-}
-
 generator client {
-  provider = "prisma-client-js"
-
-  // 다른 객체에 연결될 때 그 객체가 존재하길 바란다는 뜻
-  previewFeatures = ["referentialIntegrity"] 
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
-model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  password    String?   // 소셜 로그인은 비밀번호를 받지않는다.
-  name        String?   // 소셜 로그인은 이름을 받지않는다.
-  nickname    String?
-  phoneNumber String?      
-  address     String?   // 소셜 로그인은 주소를 받지않는다.
-  role        String    @default("user")
-  age         Int?
-  createAt    DateTime? @default(now())
-  updateAt    DateTime? @updatedAt
-
-  Profile  Profile?
-  Post     Post?
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_UPLOAD_SCHEMA_URL")
+  referentialIntegrity = "prisma"
 }
 
-model Profile {
-  id          Int       @id @default(autoincrement())
-  bio         String?
-  userId      Int       @unique
-  User        User      @relation(fields: [userId], references: [id])
+model Bookmark {
+  id                Int    @id @default(autoincrement())
+  bookmarkName      String
+  placeName         String
+  placeUrl          String
+  categoryName      String
+  addressName       String
+  roadAddressName   String
+  bookMarkId        String
+  phone             String
+  categoryGroupCode String
+  categoryGroupName String
+  x                 String
+  y                 String
+  userId            Int
+  User              User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_3")
+
+  @@index([userId], map: "user_fk_3_idx")
 }
 
 model Post {
-  id          Int       @id @default(autoincrement())
-  title       String
-  content     String
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String @db.LongText
+  userId  Int
+  User    User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_2")
 
-  userId      Int       @unique
-  User        User      @relation(fields: [userId], references: [id])
+  @@index([userId], map: "user_fk_2_idx")
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  userId Int
+  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1")
+
+  @@index([userId], map: "user_fk_1_idx")
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  email       String     @unique
+  password    String?
+  name        String?
+  nickname    String?
+  phoneNumber String?
+  address     String?
+  role        String     @default("user")
+  age         Int?
+  createAt    DateTime?  @default(now())
+  updateAt    DateTime?
+  Bookmark    Bookmark[]
+  Post        Post[]
+  Profile     Profile[]
 }
