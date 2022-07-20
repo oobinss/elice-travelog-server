@@ -1,5 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+// import { Strategy as KakaoStrategy } from 'paspport-kakao';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import { userModel } from '../db/models/user-model.js';
@@ -74,5 +75,26 @@ passport.use(
     }
   )
 );
+
+// passport.use(
+//   new KakaoStrategy(
+//     {
+//       clientID: clientID,
+//       clientSecret: clientSecret, // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
+//       callbackURL: callbackURL,
+//     },
+//     (accessToken, refreshToken, profile, done) => {
+//       // 사용자의 정보는 profile에 들어있다.
+//       User.findOrCreate(
+//         ...(err, user) => {
+//           if (err) {
+//             return done(err);
+//           }
+//           return done(null, user);
+//         }
+//       );
+//     }
+//   )
+// );
 
 export default { passport };
