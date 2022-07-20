@@ -10,13 +10,15 @@ const addPost = async (req, res, next) => {
     });
   }
   //   console.log(req.user);
-  const userId = req.user.id;
+  const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
   const { title, content } = req.body;
+
   const postInfo = {
     title,
     content,
     userId,
   };
+
   await postService.addPost(res, postInfo);
 };
 
