@@ -26,22 +26,39 @@ model User {
   createAt    DateTime? @default(now())
   updateAt    DateTime? @updatedAt
 
-  Profile  Profile?
-  Post     Post?
 }
 
 model Profile {
   id          Int       @id @default(autoincrement())
   bio         String?
+
   userId      Int       @unique
-  User        User      @relation(fields: [userId], references: [id])
 }
 
 model Post {
   id          Int       @id @default(autoincrement())
   title       String
-  content     String
+  content     String    @db.LongText
 
-  userId      Int       @unique
-  User        User      @relation(fields: [userId], references: [id])
+  userId      Int       
+}
+
+
+model Bookmark {
+  id                Int       @id @default(autoincrement())
+  bookmarkName      String // 부산여행
+
+  placeName         String 
+  placeUrl          String
+  categoryName      String
+  addressName       String
+  roadAddressName   String
+  bookMarkId        String    @unique
+  phone             String
+  categoryGroupCode String
+  categoryGroupName String
+  x                 String
+  y                 String
+
+  userId            Int     
 }

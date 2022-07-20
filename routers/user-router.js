@@ -117,6 +117,7 @@ userRouter.get(
   // user jwt-token check
   passport.authenticate('jwt', { session: false }),
   async function (req, res, next) {
+    console.log('req:', res.statusCode);
     userController.getUsers(req, res, next);
   }
 );
