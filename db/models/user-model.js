@@ -32,9 +32,18 @@ export class UserModel {
   }
 
   async delete({ userId }) {
-    await prisma.User.delete({
+    // await prisma.User.delete({
+    //   where: { id: userId },
+    // });
+    const delUser = prisma.User.delete({
       where: { id: userId },
     });
+
+    const delPost = prisma.Post.deleteMany({
+      where: { userId: userId },
+    });
+
+    await prisma.$transaction([delPost, delUser]);
   }
 
   async update({ userId, updateVal }) {
