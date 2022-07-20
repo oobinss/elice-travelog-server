@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class UserModel {
-  //mysql-prismaORM//////////////////////////////////////////////////
   async findAll() {
     const users = await prisma.User.findMany();
     return users;
@@ -32,20 +31,18 @@ export class UserModel {
     return user;
   }
 
-  //mongoDB//////////////////////////////////////////////////
-  async update({ userId, update }) {
-    const filter = { _id: userId };
-    const option = { returnOriginal: false };
-
-    const updatedUser = await User.findOneAndUpdate(filter, update, option);
-    return updatedUser;
+  async delete({ userId }) {
+    await prisma.User.delete({
+      where: { id: userId },
+    });
   }
 
-  async delete({ userId }) {
-    const filter = { _id: userId };
-
-    const deleteUser = await User.findOneAndRemove(filter);
-    return deleteUser;
+  async update({ userId, updateVal }) {
+    console.log(updateVal);
+    await prisma.User.update({
+      where: { id: userId },
+      data: updateVal,
+    });
   }
 }
 
