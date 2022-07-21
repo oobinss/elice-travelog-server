@@ -6,6 +6,7 @@ import auth from '../middlewares/auth.js';
 
 const postRouter = Router();
 
+// 게시글 생성
 postRouter.post(
   '/register',
   passport.authenticate('jwt', { session: false }),
@@ -13,5 +14,43 @@ postRouter.post(
     postController.addPost(req, res, next);
   }
 );
+
+// 내 게시글 목록 조회
+postRouter.get(
+  '/user',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    postController.getPostsByUserId(req, res, next);
+  }
+);
+
+// 게시글 1개 조회
+postRouter.get(
+  '/user/:postId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    postController.getPost(req, res, next);
+  }
+);
+
+// 게시글 목록 조회
+postRouter.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    postController.getPosts(req, res, next);
+  }
+);
+
+// 게시글 삭제
+postRouter.delete(
+  '/:postId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    postController.delPost(req, res, next);
+  }
+);
+
+// 게시글 수정
 
 export { postRouter };

@@ -68,14 +68,6 @@ const getUsers = async (req, res, next) => {
 
 const delUserById = async (req, res, next) => {
   try {
-    // content-type 을 application/json 로 프론트에서
-    // 설정 안 하고 요청하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      return res.status(400).send({
-        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
-      });
-    }
-
     const userId = Number(req.params.userId);
     // body data로부터, 확인용으로 사용할 현재 비밀번호를 추출함. (폼에서 현재비번 제출받음)
     const currentPassword = req.body.currentPassword;

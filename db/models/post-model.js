@@ -16,16 +16,16 @@ export class PostModel {
     return createdNewPost;
   }
 
-  async findByUserId(userId) {
-    const posts = await prisma.Post.findUnique({
-      where: { userId: userId },
+  async findById(postId) {
+    const post = await prisma.Post.findUnique({
+      where: { id: postId },
     });
-    return posts;
+    return post;
   }
 
-  async findByPostId(postId) {
-    const posts = await prisma.Post.findUnique({
-      where: { id: postId },
+  async findByUserId(userId) {
+    const posts = await prisma.Post.findMany({
+      where: { userId: userId },
     });
     return posts;
   }
