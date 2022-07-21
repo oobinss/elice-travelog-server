@@ -4,11 +4,29 @@ class PostService {
   constructor(postModel) {
     this.postModel = postModel;
   }
-  async addPost(res, postInfo) {
+  async addPost(postInfo) {
     const createdNewPost = await this.postModel.create(postInfo);
+    return createdNewPost;
+  }
 
-    // 추가된 유저의 db 데이터를 프론트에 다시 보내줌 (프론트에서 안 쓸 수 있지만, 편의상 보냄)
-    res.status(201).json(createdNewPost);
+  async getPostById(postId) {
+    const post = await this.postModel.findById(postId);
+    return post;
+  }
+
+  async getPostsByUserId(userId) {
+    const posts = await this.postModel.findByUserId(userId);
+    return posts;
+  }
+
+  async getPosts() {
+    const posts = await this.postModel.findAll();
+    return posts;
+  }
+
+  async delPost(postId) {
+    const deletedPost = await this.postModel.delete({ postId });
+    return 'OK';
   }
 }
 const postService = new PostService(postModel);
