@@ -34,3 +34,4 @@ import mysql from 'mysql';
 
 export * from './models/user-model.js';
 export * from './models/post-model.js';
+export * from './models/bookmark-model.js';
