@@ -24,6 +24,21 @@ class PostService {
     return posts;
   }
 
+  async setPost(postId, toUpdate, res) {
+    let post = await this.postModel.findById(postId);
+    if (!post) {
+      return res.status(404).send({
+        error: '해당되는 글이 없습니다. 다시 한 번 확인해 주세요.',
+      });
+    }
+
+    // 업데이트 진행
+    const updatedPost = await this.postModel.update({
+      postId,
+      updateVal: toUpdate,
+    });
+  }
+
   async delPost(postId) {
     const deletedPost = await this.postModel.delete({ postId });
     return 'OK';

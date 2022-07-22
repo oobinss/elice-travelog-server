@@ -60,6 +60,34 @@ const getPosts = async (req, res, next) => {
   }
 };
 
+const updatePostById = async (req, res, next) => {
+  try {
+    // content-type 을 application/json 로 프론트에서
+    // 설정 안 하고 요청하면, body가 비어 있게 됨.
+    if (is.emptyObject(req.body)) {
+      return res.status(400).send({
+        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
+      });
+    }
+
+    const postId = Number(req.params.postId);
+    const { title, content, flagHideYN } = req.body;
+
+    // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해 보내주었다면, 업데이트용 객체에 삽입함.
+    const toUpdate = {
+      ...(title && { title }),
+      ...(content && { content }),
+      ...(flagHideYN && { flagHideYN }),
+    };
+
+    // 사용자 정보를 업데이트함.
+    const updatedPostInfo = await postService.setPost(postId, toUpdate, res);
+    res.status(200).json('OK');
+  } catch (error) {
+    next(error);
+  }
+};
+
 const delPost = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
@@ -71,4 +99,11 @@ const delPost = async (req, res, next) => {
   }
 };
 
-export { addPost, delPost, getPost, getPostsByUserId, getPosts };
+export {
+  addPost,
+  getPost,
+  getPostsByUserId,
+  getPosts,
+  updatePostById,
+  delPost,
+};
