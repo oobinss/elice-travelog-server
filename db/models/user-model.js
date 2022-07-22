@@ -32,9 +32,6 @@ export class UserModel {
   }
 
   async delete({ userId }) {
-    // await prisma.User.delete({
-    //   where: { id: userId },
-    // });
     const delUser = prisma.User.delete({
       where: { id: userId },
     });
