@@ -5,8 +5,8 @@ class BookmarkService {
     this.bookmarkModel = bookmarkModel;
   }
   async addBookmark(bookmarkInfo) {
-    const createdNewPost = await this.bookmarkModel.create(bookmarkInfo);
-    return createdNewPost;
+    const createdNewBookmark = await this.bookmarkModel.create(bookmarkInfo);
+    return createdNewBookmark;
   }
 
   async getBookmarkFolders(userId) {
