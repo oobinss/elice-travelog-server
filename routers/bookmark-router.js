@@ -53,33 +53,40 @@ bookmarkRouter.get(
 );
 
 // 북마크 목록에서 선택 삭제
-// 북마크 목록에서 선택 수정(폴더명, 메모) => 폴더명만 수정, 메모만 수정... => 메모는 각각?
+bookmarkRouter.delete(
+  '/folder/delete',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    bookmarkController.delBookmarks(req, res, next);
+  }
+);
 
-// 게시글 1개 조회
-// bookmarkRouter.get(
-//   '/user/:postId',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res, next) => {
-//     bookmarkController.getPost(req, res, next);
-//   }
-// );
+// 동일명 폴더가 프론트에 존재시 생성 불가능 로직 부탁드리기
+// 북마크 폴더째 삭제
+bookmarkRouter.delete(
+  '/folder/delete/:folderName',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    bookmarkController.delFolder(req, res, next);
+  }
+);
 
-// 게시글 수정
-// bookmarkRouter.patch(
-//   '/:postId',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res, next) => {
-//     bookmarkController.updatePostById(req, res, next);
-//   }
-// );
+// 북마크 폴더명 수정
+bookmarkRouter.patch(
+  '/folder/rename',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    bookmarkController.updateFolderName(req, res, next);
+  }
+);
 
-// 게시글 삭제
-// bookmarkRouter.delete(
-//   '/:postId',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res, next) => {
-//     bookmarkController.delPost(req, res, next);
-//   }
-// );
+// 북마크 폴더내 1개의 메모 수정
+bookmarkRouter.patch(
+  '/folder/bookmark',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    bookmarkController.updateBookmarkMemo(req, res, next);
+  }
+);
 
 export { bookmarkRouter };

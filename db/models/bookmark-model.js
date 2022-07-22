@@ -8,12 +8,19 @@ export class BookmarkModel {
   //     return posts;
   //   }
   async create(bookmarkInfo) {
-    console.log(bookmarkInfo);
     const createdNewBookmark = await prisma.Bookmark.create({
       data: bookmarkInfo,
     });
     return createdNewBookmark;
   }
+
+  async createMany(bookmarkInfos) {
+    const createdNewBookmark = await prisma.Bookmark.createMany({
+      data: bookmarkInfos,
+    });
+    return createdNewBookmark;
+  }
+
   async findFoldersByUserId(userId) {
     const folders = await prisma.Bookmark.findMany({
       where: { userId: userId },
@@ -41,25 +48,51 @@ export class BookmarkModel {
     return bookmarks;
   }
 
-  //   async findById(postId) {
-  //     const post = await prisma.Post.findUnique({
-  //       where: { id: postId },
-  //     });
-  //     return post;
-  //   }
+  async deleteByFolder({ userId, bookmarkName }) {
+    await prisma.Bookmark.deleteMany({
+      where: {
+        AND: [{ userId: userId }, { bookmarkName: bookmarkName }],
+      },
+    });
+  }
 
-  //   async delete({ postId }) {
-  //     await prisma.Post.delete({
-  //       where: { id: postId },
-  //     });
-  //   }
-  //   async update({ postId, updateVal }) {
-  //     console.log(updateVal);
-  //     await prisma.Post.update({
-  //       where: { id: postId },
-  //       data: updateVal,
-  //     });
-  //   }
+  async deleteById({ userId, bookmarkIds }) {
+    const cnt = await prisma.Bookmark.deleteMany({
+      where: {
+        AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
+      },
+    });
+    return cnt;
+  }
+
+  async updateFolderName({ userId, bookmarkName, newBookmarkName }) {
+    const cnt = await prisma.Bookmark.updateMany({
+      where: {
+        AND: [{ userId: userId }, { bookmarkName: bookmarkName }],
+      },
+      data: { bookmarkName: newBookmarkName },
+    });
+    return cnt;
+  }
+
+  async isMyBookmark({ userId, id }) {
+    const bookmarks = await prisma.Bookmark.findMany({
+      where: {
+        AND: [{ id: id }, { userId: userId }],
+      },
+    });
+    return bookmarks;
+  }
+
+  async updateBookmarkMemo({ userId, id, bookmarkMemo }) {
+    const cnt = await prisma.Bookmark.update({
+      where: {
+        id: id,
+      },
+      data: { bookmarkMemo: bookmarkMemo },
+    });
+    return cnt;
+  }
 }
 
 const bookmarkModel = new BookmarkModel();
