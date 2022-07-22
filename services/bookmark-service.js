@@ -9,6 +9,11 @@ class BookmarkService {
     return createdNewBookmark;
   }
 
+  async addBookmarks(inputArray) {
+    const createdNewBookmark = await this.bookmarkModel.createMany(inputArray);
+    return createdNewBookmark;
+  }
+
   async getBookmarkFolders(userId) {
     const folders = await this.bookmarkModel.findFoldersByUserId(userId);
     return folders;
@@ -27,21 +32,52 @@ class BookmarkService {
     return bookmarks;
   }
 
-  //   async getPostById(postId) {
-  //     const post = await this.postModel.findById(postId);
-  //     return post;
-  //   }
+  async delFolder(userId, bookmarkName) {
+    const deletedFolder = await this.bookmarkModel.deleteByFolder({
+      userId,
+      bookmarkName,
+    });
+    return 'OK';
+  }
 
-  //   async getPosts() {
-  //     const posts = await this.postModel.findAll();
-  //     return posts;
-  //   }
+  async delBookmarks(userId, bookmarkIds) {
+    const cnt = await this.bookmarkModel.deleteById({
+      userId,
+      bookmarkIds,
+    });
+    return cnt;
+  }
 
-  //   async delPost(postId) {
-  //     const deletedPost = await this.postModel.delete({ postId });
-  //     return 'OK';
-  //   }
+  async updateFolderName(userId, bookmarkName, newBookmarkName) {
+    const cnt = await this.bookmarkModel.updateFolderName({
+      userId,
+      bookmarkName,
+      newBookmarkName,
+    });
+    return cnt;
+  }
+
+  async updateBookmarkMemo(userId, id, bookmarkMemo) {
+    try {
+      const bookmarks = await this.bookmarkModel.isMyBookmark({
+        userId,
+        id,
+      });
+      if (bookmarks) {
+        const cnt = await this.bookmarkModel.updateBookmarkMemo({
+          id,
+          bookmarkMemo,
+        });
+        return cnt;
+      }
+      return bookmarks;
+    } catch (error) {
+      console.log(error);
+      return '해당 북마크가 존재하지 않거나 접근 권한이 없습니다.';
+    }
+  }
 }
+
 const bookmarkService = new BookmarkService(bookmarkModel);
 
 export { bookmarkService };
