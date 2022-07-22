@@ -84,7 +84,7 @@ export class BookmarkModel {
     return bookmarks;
   }
 
-  async updateBookmarkMemo({ userId, id, bookmarkMemo }) {
+  async updateBookmarkMemo({ id, bookmarkMemo }) {
     const cnt = await prisma.Bookmark.update({
       where: {
         id: id,
