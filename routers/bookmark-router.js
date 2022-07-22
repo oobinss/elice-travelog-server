@@ -6,12 +6,31 @@ import auth from '../middlewares/auth.js';
 
 const bookmarkRouter = Router();
 
-// 북마크 생성
+// 북마크 총 목록 조회 (개발용)
+bookmarkRouter.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    console.log('in');
+    bookmarkController.getBookmarksByUser(req, res, next);
+  }
+);
+
+// 북마크 1개 생성 (개발용)
 bookmarkRouter.post(
   '/register',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     bookmarkController.addBookmark(req, res, next);
+  }
+);
+
+// 북마크 목록 생성
+bookmarkRouter.post(
+  '/registers',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    bookmarkController.addBookmarks(req, res, next);
   }
 );
 
@@ -33,14 +52,8 @@ bookmarkRouter.get(
   }
 );
 
-// 북마크 총 목록 조회 (개발용)
-bookmarkRouter.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    bookmarkController.getBookmarksByUser(req, res, next);
-  }
-);
+// 북마크 목록에서 선택 삭제
+// 북마크 목록에서 선택 수정(폴더명, 메모) => 폴더명만 수정, 메모만 수정... => 메모는 각각?
 
 // 게시글 1개 조회
 // bookmarkRouter.get(

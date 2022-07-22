@@ -18,7 +18,7 @@ model Bookmark {
   categoryName      String
   addressName       String
   roadAddressName   String
-  bookMarkId        String
+  bookmarkId        String
   phone             String
   categoryGroupCode String
   categoryGroupName String
