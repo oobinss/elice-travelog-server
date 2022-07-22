@@ -9,14 +9,27 @@ class BookmarkService {
     return createdNewPost;
   }
 
+  async getBookmarkFolders(userId) {
+    const folders = await this.bookmarkModel.findFoldersByUserId(userId);
+    return folders;
+  }
+
+  async getBookmarksByUserId(userId) {
+    const bookmarks = await this.bookmarkModel.findByUserId(userId);
+    return bookmarks;
+  }
+
+  async getBookmarksByFolder(userId, bookmarkName) {
+    const bookmarks = await this.bookmarkModel.findByFolder(
+      userId,
+      bookmarkName
+    );
+    return bookmarks;
+  }
+
   //   async getPostById(postId) {
   //     const post = await this.postModel.findById(postId);
   //     return post;
-  //   }
-
-  //   async getPostsByUserId(userId) {
-  //     const posts = await this.postModel.findByUserId(userId);
-  //     return posts;
   //   }
 
   //   async getPosts() {

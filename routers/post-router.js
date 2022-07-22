@@ -42,6 +42,15 @@ postRouter.get(
   }
 );
 
+// 게시글 수정
+postRouter.patch(
+  '/:postId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    postController.updatePostById(req, res, next);
+  }
+);
+
 // 게시글 삭제
 postRouter.delete(
   '/:postId',
@@ -50,7 +59,5 @@ postRouter.delete(
     postController.delPost(req, res, next);
   }
 );
-
-// 게시글 수정
 
 export { postRouter };

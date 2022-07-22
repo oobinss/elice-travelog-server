@@ -1,4 +1,4 @@
-import { postService } from '../services/index.js';
+import { bookmarkService, postService } from '../services/index.js';
 import is from '@sindresorhus/is';
 
 const addBookmark = async (req, res, next) => {
@@ -12,19 +12,83 @@ const addBookmark = async (req, res, next) => {
     }
     //   console.log(req.user);
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
-    const { title, content } = req.body;
+    const {
+      bookmarkName,
+      bookmarkMemo,
+      placeName,
+      placeUrl,
+      categoryName,
+      addressName,
+      roadAddressName,
+      bookMarkId,
+      phone,
+      categoryGroupCode,
+      categoryGroupName,
+      x,
+      y,
+    } = req.body;
 
     const postInfo = {
-      title,
-      content,
+      bookmarkName,
+      bookmarkMemo,
+      placeName,
+      placeUrl,
+      categoryName,
+      addressName,
+      roadAddressName,
+      bookMarkId,
+      phone,
+      categoryGroupCode,
+      categoryGroupName,
+      x,
+      y,
       userId,
     };
 
-    const post = await postService.addPost(postInfo);
+    const post = await bookmarkService.addBookmark(postInfo);
     res.status(201).json(post);
   } catch (error) {
     console.log(error);
   }
 };
 
-export { addBookmark };
+const getBookmarkName = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const folders = await bookmarkService.getBookmarkFolders(userId);
+    res.status(201).json(folders);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getBookmarksByFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const bookmarkName = req.params.folderName;
+    const bookmarks = await bookmarkService.getBookmarksByFolder(
+      userId,
+      bookmarkName
+    );
+    res.status(201).json(bookmarks);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getBookmarksByUser = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const bookmarks = await bookmarkService.getBookmarksByUserId(userId);
+    res.status(201).json(folders);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  addBookmark,
+  getBookmarkName,
+  getBookmarksByFolder,
+  getBookmarksByUser,
+};
