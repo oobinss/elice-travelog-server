@@ -91,9 +91,21 @@ userRouter.post(
  *       '200':
  *          description: 유저 소셜 로그인
  */
-userRouter.get('/kakao', async function (req, res, next) {
-  userController.socialLogin(req, res, next);
-});
+
+//* 카카오로 로그인하기 라우터 ***********************
+//? /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고,
+//  카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
+userRouter.get('/kakao', passport.authenticate('kakao'));
+
+userRouter.get(
+  '/kakao/callback',
+  passport.authenticate('kakao', {
+    failureRedirect: '/',
+  }),
+  async function (req, res, next) {
+    res.redirect('/');
+  }
+);
 
 /**
  * @swagger
@@ -113,12 +125,20 @@ userRouter.get('/kakao', async function (req, res, next) {
  *            $ref: './swagger/user.yaml#/components/schemas/User'
  */
 userRouter.get(
-  '/',
+  '/users',
   // user jwt-token check
   passport.authenticate('jwt', { session: false }),
   async function (req, res, next) {
-    console.log('req:', res.statusCode);
     userController.getUsers(req, res, next);
+  }
+);
+
+userRouter.get(
+  '/user',
+  // user jwt-token check
+  passport.authenticate('jwt', { session: false }),
+  async function (req, res, next) {
+    userController.getUser(req, res, next);
   }
 );
 

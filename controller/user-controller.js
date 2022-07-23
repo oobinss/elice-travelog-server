@@ -66,6 +66,18 @@ const getUsers = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const users = await userService.getUser(userId);
+
+    // 사용자 목록(배열)을 JSON 형태로 프론트에 보냄
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const delUserById = async (req, res, next) => {
   try {
     const userId = Number(req.params.userId);
@@ -145,6 +157,7 @@ export {
   userLogin,
   socialLogin,
   getUsers,
+  getUser,
   delUserById,
   updateUserById,
 };
