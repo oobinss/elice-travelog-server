@@ -1,48 +1,54 @@
-// import mongoose from 'mongoose';
-// const { model } = mongoose;
-
-// import { UserSchema } from '../schemas/user-schema.js';
-
-// const User = model('users', UserSchema);
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export class UserModel {
-  async findByEmail(email) {
-    const user = await User.findOne({ email });
-    return user;
-  }
-
-  async findById(userId) {
-    const user = await User.findOne({ _id: userId });
-    return user;
-  }
-
-  async create(userInfo) {
-    const createdNewUser = await User.create(userInfo);
-    return createdNewUser;
-  }
-
   async findAll() {
     const users = await prisma.User.findMany();
     return users;
   }
 
-  async update({ userId, update }) {
-    const filter = { _id: userId };
-    const option = { returnOriginal: false };
+  async findByEmail(email) {
+    const user = await prisma.User.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user;
+  }
 
-    const updatedUser = await User.findOneAndUpdate(filter, update, option);
-    return updatedUser;
+  async create(userInfo) {
+    const createdNewUser = await prisma.User.create({
+      data: userInfo,
+    });
+    return createdNewUser;
+  }
+
+  async findById(userId) {
+    const user = await prisma.User.findUnique({
+      where: { id: userId },
+    });
+    return user;
   }
 
   async delete({ userId }) {
-    const filter = { _id: userId };
+    const delUser = prisma.User.delete({
+      where: { id: userId },
+    });
 
-    const deleteUser = await User.findOneAndRemove(filter);
-    return deleteUser;
+    const delPost = prisma.Post.deleteMany({
+      where: { userId: userId },
+    });
+
+    await prisma.$transaction([delPost, delUser]);
+  }
+
+  async update({ userId, updateVal }) {
+    console.log(updateVal);
+    await prisma.User.update({
+      where: { id: userId },
+      data: updateVal,
+    });
   }
 }
 
