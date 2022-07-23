@@ -82,6 +82,12 @@ class UserService {
     return users;
   }
 
+  // 사용자 1명
+  async getUser(userId) {
+    const users = await this.userModel.findById(userId);
+    return users;
+  }
+
   // 유저정보 수정 (현재 비밀번호 필수)
   async setUser(userInfoRequired, toUpdate, res) {
     const { userId, currentPassword } = userInfoRequired;

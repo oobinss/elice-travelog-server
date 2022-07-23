@@ -1,8 +1,9 @@
 import passport from 'passport';
 // import { Strategy as LocalStrategy } from 'passport-local';
-// import { Strategy as KakaoStrategy } from 'paspport-kakao';
+import { Strategy as KakaoStrategy } from 'passport-kakao';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
+// import { Prisma } from '@prisma/client';
 import { userModel } from '../db/models/user-model.js';
 
 passport.serializeUser(function (user, done) {
@@ -76,25 +77,40 @@ passport.use(
   )
 );
 
-// passport.use(
-//   new KakaoStrategy(
-//     {
-//       clientID: clientID,
-//       clientSecret: clientSecret, // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-//       callbackURL: callbackURL,
-//     },
-//     (accessToken, refreshToken, profile, done) => {
-//       // 사용자의 정보는 profile에 들어있다.
-//       User.findOrCreate(
-//         ...(err, user) => {
-//           if (err) {
-//             return done(err);
-//           }
-//           return done(null, user);
-//         }
-//       );
-//     }
-//   )
-// );
+// const prisma = new PrismaClient();
+
+passport.use(
+  new KakaoStrategy(
+    {
+      clientID: process.env.KAKAO_CLIENT_ID,
+      clientSecret: '', // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
+      callbackURL: '/api/users/kakao/callback',
+    },
+    /**
+     * clientID에 카카오 앱 아이디 추가
+     * callbackURL: 카카오 로그인 후 카카오가 결과를 전송해줄 URL
+     * accessToken, refreshToken: 로그인 성공 후 카카오가 보내준 토큰
+     * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
+     */
+    async (accessToken, refreshToken, profile, done) => {
+      console.log(profile);
+      // 사용자의 정보는 profile에 들어있다.
+      // await prisma.User.findUnique({
+      //   where: {
+      //     email: accessToken? refreshToken?,
+      //   },
+      // });
+
+      // User.findOrCreate(
+      //   ...(err, user) => {
+      //     if (err) {
+      //       return done(err);
+      //     }
+      //     return done(null, user);
+      //   }
+      // );
+    }
+  )
+);
 
 export default { passport };
