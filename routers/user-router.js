@@ -108,7 +108,9 @@ userRouter.get(
   // kakaoStrategy에서 성공한다면 콜백 실행
   async function (req, res, next) {
     // res.redirect('/');
-    return res.status(201).send({ message: 'login success' });
+
+    // 로그인 인증된 코드의 토큰을 발급
+    userController.socialLoginToken(req, res, next);
   }
 );
 

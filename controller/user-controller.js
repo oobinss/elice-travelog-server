@@ -42,14 +42,10 @@ const userLogin = async (req, res, next) => {
   }
 };
 
-const socialLogin = async (req, res, next) => {
+const socialLoginToken = async (req, res, next) => {
   try {
-    const kakaoToken = req.body.token;
-
-    // 소셜메일로 토큰받음
-    const token = await userService.getUserTokenByEmail(kakaoToken);
-
-    res.status(200).json({ token });
+    const token = await userService.getSocialUserToken(req.user.email);
+    return res.status(201).json({ token });
   } catch (error) {
     console.log(error);
   }
@@ -155,7 +151,7 @@ const updateUserById = async (req, res, next) => {
 export {
   addUser,
   userLogin,
-  socialLogin,
+  socialLoginToken,
   getUsers,
   getUser,
   delUserById,
