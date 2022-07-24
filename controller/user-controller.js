@@ -45,7 +45,7 @@ const userLogin = async (req, res, next) => {
 const socialLoginToken = async (req, res, next) => {
   try {
     const token = await userService.getSocialUserToken(req.user.email);
-    return res.status(201).json({ token });
+    res.status(201).json({ token });
   } catch (error) {
     console.log(error);
   }

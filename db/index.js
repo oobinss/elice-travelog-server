@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import mysql from 'mysql';
+// import mongoose from 'mongoose';
+// import mysql from 'mysql';
 
 // const DB_URL =
 //   process.env.MONGODB_URL ||
