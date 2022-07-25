@@ -129,8 +129,8 @@ const delBookmarks = async (req, res, next) => {
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const bookmarkIds = req.body.data;
 
-    const cnt = await bookmarkService.delBookmarks(userId, bookmarkIds);
-    res.status(201).json(cnt);
+    const count = await bookmarkService.delBookmarks(userId, bookmarkIds);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
@@ -141,12 +141,12 @@ const updateFolderName = async (req, res, next) => {
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const { bookmarkName, newBookmarkName } = req.body;
 
-    const cnt = await bookmarkService.updateFolderName(
+    const count = await bookmarkService.updateFolderName(
       userId,
       bookmarkName,
       newBookmarkName
     );
-    res.status(201).json(cnt);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
@@ -157,12 +157,12 @@ const updateBookmarkMemo = async (req, res, next) => {
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const { id, bookmarkMemo } = req.body;
 
-    const cnt = await bookmarkService.updateBookmarkMemo(
+    const count = await bookmarkService.updateBookmarkMemo(
       userId,
       id,
       bookmarkMemo
     );
-    res.status(201).json(cnt);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
