@@ -142,11 +142,11 @@ class UserService {
     // }
 
     // 업데이트 시작 (비밀번호 변경시 해쉬화 필수)
-    // const { password } = toUpdate;
-    // if (password) {
-    //   const newPasswordHash = await bcrypt.hash(password, 10);
-    //   toUpdate.password = newPasswordHash;
-    // }
+    const { password } = toUpdate;
+    if (password) {
+      const newPasswordHash = await bcrypt.hash(password, 10);
+      toUpdate.password = newPasswordHash;
+    }
 
     // 업데이트 진행
     const updatedUser = await this.userModel.update({
