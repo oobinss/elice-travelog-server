@@ -121,7 +121,7 @@ const updateUserById = async (req, res, next) => {
     const userId = Number(req.params.userId);
     const {
       email,
-      // password,
+      password,
       name,
       nickname,
       phoneNumber,
@@ -144,7 +144,7 @@ const updateUserById = async (req, res, next) => {
     // 보내주었다면, 업데이트용 객체에 삽입함.
     const toUpdate = {
       ...(email && { email }),
-      // ...(password && { password }),
+      ...(password && { password }),
       ...(name && { name }),
       ...(nickname && { nickname }),
       ...(phoneNumber && { phoneNumber }),
