@@ -93,16 +93,16 @@ const delUserById = async (req, res, next) => {
   try {
     const userId = Number(req.params.userId);
     // body data로부터, 확인용으로 사용할 현재 비밀번호를 추출함. (폼에서 현재비번 제출받음)
-    const currentPassword = req.body.currentPassword;
+    const password = req.body.password;
 
     // currentPassword 없을 시, 진행 불가
-    if (!currentPassword) {
+    if (!password) {
       return res.status(400).send({
         error: '회원정보 삭제를 위해, 현재의 비밀번호가 필요합니다.',
       });
     }
 
-    await userService.deleteUser(res, userId, currentPassword);
+    await userService.deleteUser(res, userId, password);
   } catch (error) {
     next(error);
   }
