@@ -80,6 +80,32 @@ userRouter.post(
 
 /**
  * @swagger
+ *  /api/users:
+ *    post:
+ *      tags:
+ *      - user
+ *      description: 비밀번호 체크
+ *      produces:
+ *      - application/json
+ *      requestBody:
+ *        content:
+ *          application/x-www-form-urlencoded:
+ *            schema:
+ *              $ref: 'swagger/user.yaml#/components/schemas/User'
+ *      responses:
+ *       '200':
+ *          description: 유저 로그인 성공
+ */
+userRouter.post(
+  '/user/check',
+  passport.authenticate('jwt', { session: false }),
+  async function (req, res, next) {
+    userController.userPasswordCheck(req, res, next);
+  }
+);
+
+/**
+ * @swagger
  *  /api/users/kakao:
  *    get:
  *      tags:
@@ -97,13 +123,20 @@ userRouter.post(
 //  카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
 userRouter.get('/kakao', passport.authenticate('kakao'));
 
+//? 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
 userRouter.get(
   '/kakao/callback',
+  //? 그리고 passport 로그인 전략에 의해 kakaoStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
   passport.authenticate('kakao', {
-    failureRedirect: '/',
+    failureMessage: 'login failure',
+    // failureRedirect: '/n', // kakaoStrategy에서 실패한다면 실행
   }),
+  // kakaoStrategy에서 성공한다면 콜백 실행
   async function (req, res, next) {
-    res.redirect('/');
+    // res.redirect('/');
+
+    // 로그인 인증된 코드의 토큰을 발급
+    userController.socialLoginToken(req, res, next);
   }
 );
 

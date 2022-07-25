@@ -93,22 +93,25 @@ passport.use(
      * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
      */
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
-      // 사용자의 정보는 profile에 들어있다.
-      // await prisma.User.findUnique({
-      //   where: {
-      //     email: accessToken? refreshToken?,
-      //   },
-      // });
-
-      // User.findOrCreate(
-      //   ...(err, user) => {
-      //     if (err) {
-      //       return done(err);
-      //     }
-      //     return done(null, user);
-      //   }
-      // );
+      console.log('kakao profile', profile);
+      try {
+        const strProfileId = String(profile.id);
+        const kakaoUser = await userModel.findByEmail(strProfileId);
+        // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
+        // 이미 가입된 카카오 프로필이면 성공
+        if (kakaoUser) {
+          done(null, kakaoUser); // 로그인 인증 완료
+        } else {
+          // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
+          const newUser = await userModel.create({
+            email: strProfileId,
+          });
+          done(null, newUser); // 회원가입하고 로그인 인증 완료
+        }
+      } catch (error) {
+        console.error(error);
+        done(error);
+      }
     }
   )
 );

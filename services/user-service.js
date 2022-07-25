@@ -76,6 +76,35 @@ class UserService {
     return token;
   }
 
+  // 비밀번호 체크
+  async checkPassword(currentPassword, users) {
+    const correctPasswordHash = users.password;
+    const isPasswordCorrect = await bcrypt.compare(
+      currentPassword,
+      correctPasswordHash
+    );
+
+    return isPasswordCorrect;
+  }
+
+  // 소셜 로그인에 토큰 발급
+  async getSocialUserToken(email) {
+    // 이메일이 db에 존재하는지 확인
+    const user = await this.userModel.findByEmail(email);
+    if (!user) {
+      return res.status(404).send({
+        error: '해당 이메일은 가입 내역이 없습니다. 다시 한 번 확인해 주세요.',
+      });
+    }
+
+    // 로그인 성공 -> JWT 웹 토큰 생성
+    const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
+
+    // 2개 프로퍼티를 jwt 토큰에 담음
+    const token = jwt.sign({ userId: user.id, role: user.role }, secretKey);
+    return token;
+  }
+
   // 사용자 목록
   async getUsers() {
     const users = await this.userModel.findAll();
@@ -89,8 +118,8 @@ class UserService {
   }
 
   // 유저정보 수정 (현재 비밀번호 필수)
-  async setUser(userInfoRequired, toUpdate, res) {
-    const { userId, currentPassword } = userInfoRequired;
+  async setUser(userId, toUpdate, res) {
+    // const { userId, currentPassword } = userInfoRequired;
 
     // 해당 id의 유저가 db에 있는지 확인
     let user = await this.userModel.findById(userId);
@@ -101,23 +130,23 @@ class UserService {
     }
 
     // 비밀번호 일치 여부 확인
-    const correctPasswordHash = user.password;
-    const isPasswordCorrect = await bcrypt.compare(
-      currentPassword,
-      correctPasswordHash
-    );
-    if (!isPasswordCorrect) {
-      return res.status(400).send({
-        error: '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.',
-      });
-    }
+    // const correctPasswordHash = user.password;
+    // const isPasswordCorrect = await bcrypt.compare(
+    //   currentPassword,
+    //   correctPasswordHash
+    // );
+    // if (!isPasswordCorrect) {
+    //   return res.status(400).send({
+    //     error: '비밀번호가 일치하지 않습니다. 다시 한 번 확인해 주세요.',
+    //   });
+    // }
 
     // 업데이트 시작 (비밀번호 변경시 해쉬화 필수)
-    const { password } = toUpdate;
-    if (password) {
-      const newPasswordHash = await bcrypt.hash(password, 10);
-      toUpdate.password = newPasswordHash;
-    }
+    // const { password } = toUpdate;
+    // if (password) {
+    //   const newPasswordHash = await bcrypt.hash(password, 10);
+    //   toUpdate.password = newPasswordHash;
+    // }
 
     // 업데이트 진행
     const updatedUser = await this.userModel.update({

@@ -41,20 +41,20 @@ class BookmarkService {
   }
 
   async delBookmarks(userId, bookmarkIds) {
-    const cnt = await this.bookmarkModel.deleteById({
+    const count = await this.bookmarkModel.deleteById({
       userId,
       bookmarkIds,
     });
-    return cnt;
+    return count;
   }
 
   async updateFolderName(userId, bookmarkName, newBookmarkName) {
-    const cnt = await this.bookmarkModel.updateFolderName({
+    const count = await this.bookmarkModel.updateFolderName({
       userId,
       bookmarkName,
       newBookmarkName,
     });
-    return cnt;
+    return count;
   }
 
   async updateBookmarkMemo(userId, id, bookmarkMemo) {
@@ -64,11 +64,11 @@ class BookmarkService {
         id,
       });
       if (bookmarks) {
-        const cnt = await this.bookmarkModel.updateBookmarkMemo({
+        const count = await this.bookmarkModel.updateBookmarkMemo({
           id,
           bookmarkMemo,
         });
-        return cnt;
+        return count;
       }
       return bookmarks;
     } catch (error) {
