@@ -42,6 +42,21 @@ const userLogin = async (req, res, next) => {
   }
 };
 
+const userPasswordCheck = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const users = await userService.getUser(req.user.id);
+
+    const isPassword = await userService.checkPassword(password, users);
+
+    // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
+    // res.status(200).json({ userId, token });
+    res.status(200).json({ isPassword });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const socialLoginToken = async (req, res, next) => {
   try {
     const token = await userService.getSocialUserToken(req.user.email);
@@ -106,43 +121,41 @@ const updateUserById = async (req, res, next) => {
     const userId = Number(req.params.userId);
     const {
       email,
-      password,
+      // password,
       name,
       nickname,
-      address,
       phoneNumber,
+      address,
       role,
       age,
-      currentPassword,
+      profileImg,
+      // currentPassword,
     } = req.body;
 
-    if (!currentPassword) {
-      return res.status(400).send({
-        error: '정보를 변경하려면, 현재의 비밀번호가 필요합니다.',
-      });
-    }
+    // if (!currentPassword) {
+    //   return res.status(400).send({
+    //     error: '정보를 변경하려면, 현재의 비밀번호가 필요합니다.',
+    //   });
+    // }
 
-    const userInfoRequired = { userId, currentPassword };
+    // const userInfoRequired = { userId, currentPassword };
 
     // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해
     // 보내주었다면, 업데이트용 객체에 삽입함.
     const toUpdate = {
       ...(email && { email }),
-      ...(password && { password }),
+      // ...(password && { password }),
       ...(name && { name }),
       ...(nickname && { nickname }),
-      ...(address && { address }),
       ...(phoneNumber && { phoneNumber }),
+      ...(address && { address }),
+      // ...(phoneNumber && { phoneNumber }),
       ...(role && { role }),
       ...(age && { age }),
+      ...(profileImg && { profileImg }),
     };
 
-    // 사용자 정보를 업데이트함.
-    const updatedUserInfo = await userService.setUser(
-      userInfoRequired,
-      toUpdate,
-      res
-    );
+    await userService.setUser(userId, toUpdate, res);
   } catch (error) {
     next(error);
   }
@@ -151,6 +164,7 @@ const updateUserById = async (req, res, next) => {
 export {
   addUser,
   userLogin,
+  userPasswordCheck,
   socialLoginToken,
   getUsers,
   getUser,

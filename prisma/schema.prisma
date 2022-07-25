@@ -10,7 +10,7 @@ datasource db {
 }
 
 model Bookmark {
-  id                Int    @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
   bookmarkName      String
   bookmarkMemo      String
   placeName         String
@@ -24,10 +24,11 @@ model Bookmark {
   categoryGroupName String
   x                 String
   y                 String
+  bookmarkImg       String? @db.LongText
   userId            Int
-  User              User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_3_idx")
+  User              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_2_idx")
 
-  @@index([userId], map: "user_fk_3_idx")
+  @@index([userId], map: "user_fk_2_idx")
 }
 
 model Post {
@@ -35,17 +36,9 @@ model Post {
   title      String
   content    String @db.LongText
   flagHideYN String @default("N") @db.Char(1)
+  markedData Json?
   userId     Int
-  User       User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_2_idx")
-
-  @@index([userId], map: "user_fk_2_idx")
-}
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int
-  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1_idx")
+  User       User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1_idx")
 
   @@index([userId], map: "user_fk_1_idx")
 }
@@ -60,9 +53,9 @@ model User {
   address     String?
   role        String     @default("user")
   age         Int?
+  profileImg  String?    @db.LongText
   createAt    DateTime?  @default(now())
   updateAt    DateTime?
   Bookmark    Bookmark[]
   Post        Post[]
-  Profile     Profile[]
 }

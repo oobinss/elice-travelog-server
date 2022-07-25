@@ -80,6 +80,32 @@ userRouter.post(
 
 /**
  * @swagger
+ *  /api/users:
+ *    post:
+ *      tags:
+ *      - user
+ *      description: 비밀번호 체크
+ *      produces:
+ *      - application/json
+ *      requestBody:
+ *        content:
+ *          application/x-www-form-urlencoded:
+ *            schema:
+ *              $ref: 'swagger/user.yaml#/components/schemas/User'
+ *      responses:
+ *       '200':
+ *          description: 유저 로그인 성공
+ */
+userRouter.post(
+  '/user/check',
+  passport.authenticate('jwt', { session: false }),
+  async function (req, res, next) {
+    userController.userPasswordCheck(req, res, next);
+  }
+);
+
+/**
+ * @swagger
  *  /api/users/kakao:
  *    get:
  *      tags:

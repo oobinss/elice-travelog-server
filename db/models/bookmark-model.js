@@ -57,22 +57,22 @@ export class BookmarkModel {
   }
 
   async deleteById({ userId, bookmarkIds }) {
-    const cnt = await prisma.Bookmark.deleteMany({
+    const count = await prisma.Bookmark.deleteMany({
       where: {
         AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
       },
     });
-    return cnt;
+    return count;
   }
 
   async updateFolderName({ userId, bookmarkName, newBookmarkName }) {
-    const cnt = await prisma.Bookmark.updateMany({
+    const count = await prisma.Bookmark.updateMany({
       where: {
         AND: [{ userId: userId }, { bookmarkName: bookmarkName }],
       },
       data: { bookmarkName: newBookmarkName },
     });
-    return cnt;
+    return count;
   }
 
   async isMyBookmark({ userId, id }) {
@@ -85,13 +85,13 @@ export class BookmarkModel {
   }
 
   async updateBookmarkMemo({ id, bookmarkMemo }) {
-    const cnt = await prisma.Bookmark.update({
+    const count = await prisma.Bookmark.update({
       where: {
         id: id,
       },
       data: { bookmarkMemo: bookmarkMemo },
     });
-    return cnt;
+    return count;
   }
 }
 
