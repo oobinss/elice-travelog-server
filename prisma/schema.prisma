@@ -1,46 +1,68 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_UPLOAD_SCHEMA_URL")
-  
-  // 추가
-//   referentialIntegrity = "prisma" 
-}
-
 generator client {
-  provider = "prisma-client-js"
-
-  // 추가
-//   previewFeatures = ["referentialIntegrity"] 
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
-model User {
-  id       Int      @id @default(autoincrement())
-  email    String
-  password String?
-  name     String?
-  nickname String
-  address  String?
-  role     String
-  age      Int
-  createAt DateTime? @default(now())
-  updateAt DateTime? @updatedAt
-
-  Profile  Profile?
-  Post     Post?
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_UPLOAD_SCHEMA_URL")
+  referentialIntegrity = "prisma"
 }
 
-model Profile {
-  id       Int      @id @default(autoincrement())
-  bio      String?
-  userId   Int      @unique
-  User     User     @relation(fields: [userId], references: [id])
+model Bookmark {
+  id                Int    @id @default(autoincrement())
+  bookmarkName      String
+  bookmarkMemo      String
+  placeName         String
+  placeUrl          String
+  categoryName      String
+  addressName       String
+  roadAddressName   String
+  bookmarkId        String
+  phone             String
+  categoryGroupCode String
+  categoryGroupName String
+  x                 String
+  y                 String
+  userId            Int
+  User              User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_3_idx")
+
+  @@index([userId], map: "user_fk_3_idx")
 }
 
 model Post {
-  id       Int      @id @default(autoincrement())
-  title    String
-  content  String
+  id         Int    @id @default(autoincrement())
+  title      String
+  content    String @db.LongText
+  flagHideYN String @default("N") @db.Char(1)
+  userId     Int
+  User       User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_2_idx")
 
-  userId   Int      @unique
-  User     User     @relation(fields: [userId], references: [id])
+  @@index([userId], map: "user_fk_2_idx")
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  userId Int
+  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1_idx")
+
+  @@index([userId], map: "user_fk_1_idx")
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  email       String     @unique
+  password    String?
+  name        String?
+  nickname    String?
+  phoneNumber String?
+  address     String?
+  role        String     @default("user")
+  age         Int?
+  createAt    DateTime?  @default(now())
+  updateAt    DateTime?
+  Bookmark    Bookmark[]
+  Post        Post[]
+  Profile     Profile[]
 }
