@@ -10,16 +10,17 @@ const addPost = async (req, res, next) => {
         error: 'headers의 Content-Type을 application/json으로 설정해주세요',
       });
     }
-    //   console.log(req.user);
+
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const { title, content, flagHideYN, markedData } = req.body;
 
     const postInfo = {
+      userId,
+
       title,
       content,
       flagHideYN,
       markedData,
-      userId,
     };
 
     const post = await postService.addPost(postInfo);
@@ -73,13 +74,14 @@ const updatePostById = async (req, res, next) => {
     }
 
     const postId = Number(req.params.postId);
-    const { title, content, flagHideYN } = req.body;
+    const { title, content, flagHideYN, markedData } = req.body;
 
     // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해 보내주었다면, 업데이트용 객체에 삽입함.
     const toUpdate = {
       ...(title && { title }),
       ...(content && { content }),
       ...(flagHideYN && { flagHideYN }),
+      ...(markedData && { markedData }),
     };
 
     // 사용자 정보를 업데이트함.

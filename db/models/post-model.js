@@ -9,7 +9,6 @@ export class PostModel {
   }
 
   async create(postInfo) {
-    console.log(postInfo);
     const createdNewPost = await prisma.Post.create({
       data: postInfo,
     });
@@ -37,7 +36,6 @@ export class PostModel {
   }
 
   async update({ postId, updateVal }) {
-    console.log(updateVal);
     await prisma.Post.update({
       where: { id: postId },
       data: updateVal,
