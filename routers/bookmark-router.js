@@ -11,7 +11,6 @@ bookmarkRouter.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    console.log('in');
     bookmarkController.getBookmarksByUser(req, res, next);
   }
 );

@@ -4,6 +4,7 @@ import { Strategy as KakaoStrategy } from 'passport-kakao';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 // import { Prisma } from '@prisma/client';
+import { userService } from '../services/index.js';
 import { userModel } from '../db/models/user-model.js';
 
 passport.serializeUser(function (user, done) {
@@ -97,6 +98,7 @@ passport.use(
       try {
         const strProfileId = String(profile.id);
         const kakaoUser = await userModel.findByEmail(strProfileId);
+
         // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
         // 이미 가입된 카카오 프로필이면 성공
         if (kakaoUser) {
