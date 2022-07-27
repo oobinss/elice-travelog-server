@@ -26,21 +26,40 @@ model Bookmark {
   y                 String
   bookmarkImg       String? @db.LongText
   userId            Int
-  User              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_2_idx")
+  User              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Bookmark_ibfk_1")
 
   @@index([userId], map: "user_fk_2_idx")
 }
 
+model Comment {
+  id       Int       @id @default(autoincrement())
+  content  String
+  like     Int       @default(0)
+  createAt DateTime? @default(now())
+  updateAt DateTime?
+  postId   Int
+  userId   Int
+  Post     Post      @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_1")
+  User     User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_2")
+
+  @@index([postId], map: "post_fk_1_idx")
+  @@index([userId], map: "user_fk_3_idx")
+}
+
 model Post {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   title      String
-  content    String @db.LongText
-  flagHideYN String @default("N") @db.Char(1)
+  content    String    @db.LongText
+  flagHideYN String    @default("N") @db.Char(1)
   markedData Json?
-  createAt   DateTime?  @default(now())
+  cateCity   String
+  tag        String    @db.LongText
+  like       Int       @default(0)
+  createAt   DateTime? @default(now())
   updateAt   DateTime?
   userId     Int
-  User       User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1_idx")
+  User       User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Post_ibfk_1")
+  Comment    Comment[]
 
   @@index([userId], map: "user_fk_1_idx")
 }
@@ -59,5 +78,6 @@ model User {
   createAt    DateTime?  @default(now())
   updateAt    DateTime?
   Bookmark    Bookmark[]
+  Comment     Comment[]
   Post        Post[]
 }
