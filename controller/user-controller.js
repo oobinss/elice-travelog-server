@@ -57,10 +57,11 @@ const userPasswordCheck = async (req, res, next) => {
   }
 };
 
-const socialLoginToken = async (req, res, next) => {
+const socialLoginToken = async (req, res) => {
   try {
     const token = await userService.getSocialUserToken(req.user.email);
-    res.status(201).json({ token });
+    console.log(token);
+    res.status(200).json({ token });
   } catch (error) {
     console.log(error);
   }
