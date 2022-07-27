@@ -37,6 +37,8 @@ model Post {
   content    String @db.LongText
   flagHideYN String @default("N") @db.Char(1)
   markedData Json?
+  createAt   DateTime?  @default(now())
+  updateAt   DateTime?
   userId     Int
   User       User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_fk_1_idx")
 

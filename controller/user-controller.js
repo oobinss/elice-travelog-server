@@ -59,8 +59,9 @@ const userPasswordCheck = async (req, res, next) => {
 
 const socialLoginToken = async (req, res) => {
   try {
-    const token = await userService.getSocialUserToken(req.user.email);
-    console.log(token);
+    const userEmail = String(req.body.data.data.id);
+    const name = req.body.data.data.properties.nickname;
+    const token = await userService.getSocialUserToken(userEmail);
     res.status(200).json({ token });
   } catch (error) {
     console.log(error);
