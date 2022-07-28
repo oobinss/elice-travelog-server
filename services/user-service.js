@@ -89,14 +89,6 @@ class UserService {
 
   // 소셜 로그인에 토큰 발급
   async getSocialUserToken(email, res) {
-    // 이메일이 db에 존재하는지 확인
-    const user = await this.userModel.findByEmail(email);
-    if (!user) {
-      return res.status(404).send({
-        error: '해당 이메일은 가입 내역이 없습니다. 다시 한 번 확인해 주세요.',
-      });
-    }
-
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
 
@@ -258,12 +250,12 @@ class UserService {
 
   // 카카오토큰이 getUserbyEmail에 있으면 로그인토큰발급
   // 없으면 회원가입
-  async getUserTokenByEmail(kakaoToken) {
-    let user = await this.userModel.findByEmail(kakaoToken);
+  async getUserTokenByEmail(kakaoId) {
+    let user = await this.userModel.findByEmail(kakaoId);
     // 없으면 회원가입
     if (!user) {
-      await this.addSocialUser(kakaoToken);
-      user = await this.userModel.findByEmail(kakaoToken);
+      await this.addSocialUser(kakaoId);
+      user = await this.userModel.findByEmail(kakaoId);
     }
 
     // 로그인 성공 -> JWT 웹 토큰 생성
