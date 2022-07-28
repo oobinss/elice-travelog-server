@@ -7,12 +7,12 @@ export class CommentModel {
     const comments = await prisma.Comment.findMany();
     return comments;
   }
-  //   async create(bookmarkInfo) {
-  //     const createdNewBookmark = await prisma.Bookmark.create({
-  //       data: bookmarkInfo,
-  //     });
-  //     return createdNewBookmark;
-  //   }
+  async create(commentInfo) {
+    const createdNewComment = await prisma.Comment.create({
+      data: commentInfo,
+    });
+    return createdNewComment;
+  }
 
   //   async createMany(bookmarkInfos) {
   //     const createdNewBookmark = await prisma.Bookmark.createMany({

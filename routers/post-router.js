@@ -61,12 +61,8 @@ postRouter.delete(
 );
 
 // 피드 목록
-postRouter.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    postController.getPostsByCreate(req, res, next);
-  }
-);
+postRouter.get('/', async (req, res, next) => {
+  postController.getPostsByCreate(req, res, next);
+});
 
 export { postRouter };
