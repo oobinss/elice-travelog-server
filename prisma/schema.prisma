@@ -26,6 +26,7 @@ model Bookmark {
   y                 String
   bookmarkImg       String? @db.LongText
   userId            Int
+  User              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Bookmark_ibfk_1")
 
   @@index([userId], map: "user_fk_2_idx")
 }
@@ -38,6 +39,8 @@ model Comment {
   updateAt DateTime?
   postId   Int
   userId   Int
+  Post     Post      @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_1")
+  User     User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_2")
 
   @@index([postId], map: "post_fk_1_idx")
   @@index([userId], map: "user_fk_3_idx")
@@ -56,22 +59,27 @@ model Post {
   updateAt   DateTime?
   userId     Int
   mainImg    String?
+  User       User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Post_ibfk_1")
+  Comment    Comment[]
 
   @@index([userId], map: "user_fk_1_idx")
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
+  id          Int        @id @default(autoincrement())
+  email       String     @unique
   password    String?
   name        String?
   nickname    String?
   phoneNumber String?
   address     String?
-  role        String    @default("user")
+  role        String     @default("user")
   age         Int?
-  profileImg  String?   @db.LongText
-  createAt    DateTime? @default(now())
+  profileImg  String?    @db.LongText
+  createAt    DateTime?  @default(now())
   updateAt    DateTime?
   profileText String?
+  Bookmark    Bookmark[]
+  Comment     Comment[]
+  Post        Post[]
 }
