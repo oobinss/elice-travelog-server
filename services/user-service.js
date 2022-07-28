@@ -88,7 +88,7 @@ class UserService {
   }
 
   // 소셜 로그인에 토큰 발급
-  async getSocialUserToken(email) {
+  async getSocialUserToken(email, res) {
     // 이메일이 db에 존재하는지 확인
     const user = await this.userModel.findByEmail(email);
     if (!user) {

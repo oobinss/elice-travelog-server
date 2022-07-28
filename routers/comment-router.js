@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as commentController from '../controller/comment-controller.js';
-// import { bookmarkService } from '../services/index.js';
+// import { commentService } from '../services/index.js';
 import passport from 'passport';
 import auth from '../middlewares/auth.js';
 
@@ -14,16 +14,26 @@ commentRouter.get(
     commentController.getComments(req, res, next);
   }
 );
-/*
-// 북마크 1개 생성 (개발용)
-bookmarkRouter.post(
-  '/register',
+
+// 댓글 1개 생성 (개발용)
+commentRouter.post(
+  '/register/:postId',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    bookmarkController.addBookmark(req, res, next);
+    commentController.addComment(req, res, next);
   }
 );
 
+// 게시글 1개에 대한 댓글 조회
+commentRouter.post(
+  '/:postId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    commentController.getCommentsByPostId(req, res, next);
+  }
+);
+
+/*
 // 북마크 목록 생성
 bookmarkRouter.post(
   '/registers',
