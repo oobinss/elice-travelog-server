@@ -1,4 +1,4 @@
-import { commentService } from '../services/index.js';
+import { boardService } from '../services/index.js';
 import * as tools from '../utils/exception-tools.js';
 
 const addComment = async (req, res, next) => {

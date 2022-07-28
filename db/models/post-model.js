@@ -18,6 +18,14 @@ export class PostModel {
   async findById(postId) {
     const post = await prisma.Post.findUnique({
       where: { id: postId },
+      include: {
+        User: {
+          select: {
+            nickname: true,
+            profileImg: true,
+          },
+        },
+      },
     });
     return post;
   }
