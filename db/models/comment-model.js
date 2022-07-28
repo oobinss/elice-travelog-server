@@ -24,6 +24,14 @@ export class CommentModel {
   async findByPostId(postId) {
     const comments = await prisma.Comment.findMany({
       where: { postId: postId },
+      include: {
+        User: {
+          select: {
+            nickname: true,
+            profileImg: true,
+          },
+        },
+      },
       orderBy: { createAt: 'asc' },
     });
     return comments;
