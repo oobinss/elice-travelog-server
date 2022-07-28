@@ -1,3 +1,5 @@
+import is from '@sindresorhus/is';
+
 function isHeaderJSON(reqBody) {
   if (is.emptyObject(reqBody)) {
     return res.status(400).send({

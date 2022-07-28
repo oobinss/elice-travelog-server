@@ -26,7 +26,6 @@ model Bookmark {
   y                 String
   bookmarkImg       String? @db.LongText
   userId            Int
-  User              User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Bookmark_ibfk_1")
 
   @@index([userId], map: "user_fk_2_idx")
 }
@@ -39,8 +38,6 @@ model Comment {
   updateAt DateTime?
   postId   Int
   userId   Int
-  Post     Post      @relation(fields: [postId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_1")
-  User     User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Comment_ibfk_2")
 
   @@index([postId], map: "post_fk_1_idx")
   @@index([userId], map: "user_fk_3_idx")
@@ -50,36 +47,31 @@ model Post {
   id         Int       @id @default(autoincrement())
   title      String
   content    String    @db.LongText
-  mainImg    String?
   flagHideYN String    @default("N") @db.Char(1)
   markedData Json?
   cateCity   String
-  tag        String?   @db.LongText
+  tag        Json?
   like       Int       @default(0)
   createAt   DateTime? @default(now())
   updateAt   DateTime?
   userId     Int
-  User       User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Post_ibfk_1")
-  Comment    Comment[]
+  mainImg    String?
 
   @@index([userId], map: "user_fk_1_idx")
 }
 
 model User {
-  id          Int        @id @default(autoincrement())
-  email       String     @unique
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
   password    String?
   name        String?
   nickname    String?
   phoneNumber String?
   address     String?
-  role        String     @default("user")
+  role        String    @default("user")
   age         Int?
-  profileImg  String?    @db.LongText
-  profileText String?
-  createAt    DateTime?  @default(now())
+  profileImg  String?   @db.LongText
+  createAt    DateTime? @default(now())
   updateAt    DateTime?
-  Bookmark    Bookmark[]
-  Comment     Comment[]
-  Post        Post[]
+  profileText String?
 }

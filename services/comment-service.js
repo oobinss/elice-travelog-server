@@ -9,10 +9,11 @@ class CommentService {
     const comments = await this.commentModel.findAll();
     return comments;
   }
-  //   async addBookmark(bookmarkInfo) {
-  //     const createdNewBookmark = await this.bookmarkModel.create(bookmarkInfo);
-  //     return createdNewBookmark;
-  //   }
+
+  async addComment(commentInfo) {
+    const createdComment = await this.commentModel.create(commentInfo);
+    return createdComment;
+  }
 
   //   async addBookmarks(inputArray) {
   //     const createdNewBookmark = await this.bookmarkModel.createMany(inputArray);
