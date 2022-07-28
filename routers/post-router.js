@@ -61,11 +61,8 @@ postRouter.delete(
 );
 
 // 피드 목록
-postRouter.get('/', async (req, res, next) => {
+postRouter.get('/:type', async (req, res, next) => {
   postController.getPostsByCreate(req, res, next);
 });
-
-// 동행 게시글 생성
-// Q&A 게시판 CRUD
 
 export { postRouter };
