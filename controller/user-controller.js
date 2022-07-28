@@ -130,6 +130,7 @@ const updateUserById = async (req, res, next) => {
       role,
       age,
       profileImg,
+      profileText,
       // currentPassword,
     } = req.body;
 
@@ -154,6 +155,7 @@ const updateUserById = async (req, res, next) => {
       ...(role && { role }),
       ...(age && { age }),
       ...(profileImg && { profileImg }),
+      ...(profileText && { profileText }),
     };
 
     await userService.setUser(userId, toUpdate, res);
