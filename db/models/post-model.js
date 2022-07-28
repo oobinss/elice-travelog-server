@@ -45,10 +45,19 @@ export class PostModel {
   async findByCreate() {
     const posts = await prisma.Post.findMany({
       where: { flagHideYN: 'N' },
+      include: {
+        User: {
+          select: {
+            nickname: true,
+            profileImg: true,
+          },
+        },
+      },
       orderBy: {
         createAt: 'desc',
       },
     });
+
     return posts;
   }
 }
