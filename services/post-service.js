@@ -49,8 +49,8 @@ class PostService {
     return posts;
   }
 
-  async getPostsByCreate() {
-    const posts = await this.postModel.findByCreate();
+  async getPostsByCreate(type) {
+    const posts = await this.postModel.findByCreate(type);
     return posts;
   }
 }

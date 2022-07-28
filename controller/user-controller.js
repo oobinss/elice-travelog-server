@@ -1,15 +1,10 @@
 import { userService } from '../services/index.js';
-import is from '@sindresorhus/is';
+import * as tools from '../utils/exception-tools.js';
 
 const addUser = async (req, res, next) => {
   try {
-    // Content-Type: application/json 설정을 안 한 경우, 에러를 만들도록 함.
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      return res.status(400).send({
-        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
-      });
-    }
+    tools.isHeaderJSON(req.body);
+
     const { email, password, name, nickname, address, role, age } = req.body;
 
     const userInfo = {
@@ -111,13 +106,7 @@ const delUserById = async (req, res, next) => {
 
 const updateUserById = async (req, res, next) => {
   try {
-    // content-type 을 application/json 로 프론트에서
-    // 설정 안 하고 요청하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      return res.status(400).send({
-        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
-      });
-    }
+    tools.isHeaderJSON(req.body);
 
     const userId = Number(req.params.userId);
     const {
