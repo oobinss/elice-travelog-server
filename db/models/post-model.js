@@ -41,6 +41,16 @@ export class PostModel {
       data: updateVal,
     });
   }
+
+  async findByCreate() {
+    const posts = await prisma.Post.findMany({
+      where: { flagHideYN: 'N' },
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
+    return posts;
+  }
 }
 
 const postModel = new PostModel();
