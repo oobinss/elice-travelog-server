@@ -50,10 +50,11 @@ model Post {
   id         Int       @id @default(autoincrement())
   title      String
   content    String    @db.LongText
+  mainImg    String?
   flagHideYN String    @default("N") @db.Char(1)
   markedData Json?
   cateCity   String
-  tag        String    @db.LongText
+  tag        String?   @db.LongText
   like       Int       @default(0)
   createAt   DateTime? @default(now())
   updateAt   DateTime?
@@ -75,6 +76,7 @@ model User {
   role        String     @default("user")
   age         Int?
   profileImg  String?    @db.LongText
+  profileText String?
   createAt    DateTime?  @default(now())
   updateAt    DateTime?
   Bookmark    Bookmark[]
