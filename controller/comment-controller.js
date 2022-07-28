@@ -24,25 +24,10 @@ const addComment = async (req, res, next) => {
 
 const getCommentsByPostId = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const postId = Number(req.params.postId);
 
-    const folders = await bookmarkService.getBookmarkFolders(userId);
-    res.status(201).json(folders);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const getBookmarksByFolder = async (req, res, next) => {
-  try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
-    const bookmarkName = req.params.folderName;
-    const bookmarks = await bookmarkService.getBookmarksByFolder(
-      userId,
-      bookmarkName
-    );
-    res.status(201).json(bookmarks);
+    const comments = await commentService.getCommentsByPostId(postId);
+    res.status(201).json(comments);
   } catch (error) {
     console.log(error);
   }
@@ -58,13 +43,19 @@ const getComments = async (req, res, next) => {
   }
 };
 
-const delFolder = async (req, res, next) => {
+const delComment = async (req, res, next) => {
   try {
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
-    const bookmarkName = req.params.folderName;
+    const commentId = Number(req.params.commentId);
+    const comment = await commentService.getCommentById(commentId);
 
-    const bookmarks = await bookmarkService.delFolder(userId, bookmarkName);
-    res.status(201).json(bookmarks);
+    let count = 0;
+    if (userId == comment.userId) {
+      count = await commentService.delComment(commentId);
+    } else {
+      res.status(404).json({ errorMessage: '접근 권한이 없습니다.' });
+    }
+    res.status(201).json({ count });
   } catch (error) {
     console.log(error);
   }
@@ -77,6 +68,20 @@ const delBookmarks = async (req, res, next) => {
 
     const count = await bookmarkService.delBookmarks(userId, bookmarkIds);
     res.status(201).json(count);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getBookmarksByFolder = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const bookmarkName = req.params.folderName;
+    const bookmarks = await bookmarkService.getBookmarksByFolder(
+      userId,
+      bookmarkName
+    );
+    res.status(201).json(bookmarks);
   } catch (error) {
     console.log(error);
   }
@@ -114,4 +119,4 @@ const updateBookmarkMemo = async (req, res, next) => {
   }
 };
 
-export { addComment, getComments, getCommentsByPostId };
+export { addComment, getComments, getCommentsByPostId, delComment };

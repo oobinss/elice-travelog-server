@@ -15,10 +15,20 @@ class CommentService {
     return createdComment;
   }
 
-  //   async addBookmarks(inputArray) {
-  //     const createdNewBookmark = await this.bookmarkModel.createMany(inputArray);
-  //     return createdNewBookmark;
-  //   }
+  async getCommentById(commentId) {
+    const comments = await this.commentModel.findById(commentId);
+    return comments;
+  }
+
+  async getCommentsByPostId(postId) {
+    const comments = await this.commentModel.findByPostId(postId);
+    return comments;
+  }
+
+  async delComment(commentId) {
+    const count = await this.commentModel.deleteOne(commentId);
+    return count;
+  }
 
   //   async getBookmarkFolders(userId) {
   //     const folders = await this.bookmarkModel.findFoldersByUserId(userId);
@@ -36,14 +46,6 @@ class CommentService {
   //       bookmarkName
   //     );
   //     return bookmarks;
-  //   }
-
-  //   async delFolder(userId, bookmarkName) {
-  //     const deletedFolder = await this.bookmarkModel.deleteByFolder({
-  //       userId,
-  //       bookmarkName,
-  //     });
-  //     return 'OK';
   //   }
 
   //   async delBookmarks(userId, bookmarkIds) {
