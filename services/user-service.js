@@ -152,6 +152,7 @@ class UserService {
 
   // 유저정보중 주소와,연락처 수정,비밀번호값없이 변경할수있는 점이 유저정보수정과 다름
   async setUserAddress(userInfoRequired, toUpdate) {
+    console.log('uiidfd');
     // 객체 destructuring
     const { userId } = userInfoRequired;
 
