@@ -25,11 +25,16 @@ commentRouter.post(
 );
 
 // 게시글 1개에 대한 댓글 조회
-commentRouter.post(
-  '/:postId',
+commentRouter.get('/:postId', async (req, res, next) => {
+  commentController.getCommentsByPostId(req, res, next);
+});
+
+// 북마크 목록에서 선택 삭제
+commentRouter.delete(
+  '/:commentId',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
-    commentController.getCommentsByPostId(req, res, next);
+    commentController.delComment(req, res, next);
   }
 );
 
@@ -58,15 +63,6 @@ bookmarkRouter.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     bookmarkController.getBookmarksByFolder(req, res, next);
-  }
-);
-
-// 북마크 목록에서 선택 삭제
-bookmarkRouter.delete(
-  '/folder/delete',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res, next) => {
-    bookmarkController.delBookmarks(req, res, next);
   }
 );
 
