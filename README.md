@@ -34,7 +34,7 @@
 
 #### 백엔드
 > ![Node](https://img.shields.io/badge/Node-%2300f.svg?style=for-the-badge&logo=Node&logoColor=white)
-> ![PrismaORM](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
+> ![PrismaORM](https://img.shields.io/badge/PrismaORM-4B3263?style=for-the-badge&logo=PrismaORM&logoColor=white)
 > ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 > ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 > ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
