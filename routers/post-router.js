@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as postController from '../controller/post-controller.js';
-import { postService } from '../services/index.js';
 import passport from 'passport';
 import auth from '../middlewares/auth.js';
 
@@ -35,7 +34,7 @@ postRouter.get(
 
 // 게시글 목록 조회
 postRouter.get(
-  '/',
+  '/dev',
   passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     postController.getPosts(req, res, next);
@@ -59,5 +58,10 @@ postRouter.delete(
     postController.delPost(req, res, next);
   }
 );
+
+// 피드 목록
+postRouter.get('/:type', async (req, res, next) => {
+  postController.getPostsByCreate(req, res, next);
+});
 
 export { postRouter };

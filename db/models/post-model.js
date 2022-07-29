@@ -9,7 +9,6 @@ export class PostModel {
   }
 
   async create(postInfo) {
-    console.log(postInfo);
     const createdNewPost = await prisma.Post.create({
       data: postInfo,
     });
@@ -19,6 +18,14 @@ export class PostModel {
   async findById(postId) {
     const post = await prisma.Post.findUnique({
       where: { id: postId },
+      include: {
+        User: {
+          select: {
+            nickname: true,
+            profileImg: true,
+          },
+        },
+      },
     });
     return post;
   }
@@ -37,11 +44,29 @@ export class PostModel {
   }
 
   async update({ postId, updateVal }) {
-    console.log(updateVal);
     await prisma.Post.update({
       where: { id: postId },
       data: updateVal,
     });
+  }
+
+  async findByCreate(type) {
+    const posts = await prisma.Post.findMany({
+      where: { flagHideYN: 'N', type: type },
+      include: {
+        User: {
+          select: {
+            nickname: true,
+            profileImg: true,
+          },
+        },
+      },
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
+
+    return posts;
   }
 }
 

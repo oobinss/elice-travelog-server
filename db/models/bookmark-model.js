@@ -3,10 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class BookmarkModel {
-  //   async findAll() {
-  //     const posts = await prisma.Post.findMany();
-  //     return posts;
-  //   }
   async create(bookmarkInfo) {
     const createdNewBookmark = await prisma.Bookmark.create({
       data: bookmarkInfo,
@@ -56,23 +52,23 @@ export class BookmarkModel {
     });
   }
 
-  async deleteById({ userId, bookmarkIds }) {
-    const cnt = await prisma.Bookmark.deleteMany({
+  async deleteById({ bookmarkId }) {
+    const count = await prisma.Bookmark.delete({
       where: {
-        AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
+        id: bookmarkId,
       },
     });
-    return cnt;
+    return count;
   }
 
   async updateFolderName({ userId, bookmarkName, newBookmarkName }) {
-    const cnt = await prisma.Bookmark.updateMany({
+    const count = await prisma.Bookmark.updateMany({
       where: {
         AND: [{ userId: userId }, { bookmarkName: bookmarkName }],
       },
       data: { bookmarkName: newBookmarkName },
     });
-    return cnt;
+    return count;
   }
 
   async isMyBookmark({ userId, id }) {
@@ -85,13 +81,13 @@ export class BookmarkModel {
   }
 
   async updateBookmarkMemo({ id, bookmarkMemo }) {
-    const cnt = await prisma.Bookmark.update({
+    const count = await prisma.Bookmark.update({
       where: {
         id: id,
       },
       data: { bookmarkMemo: bookmarkMemo },
     });
-    return cnt;
+    return count;
   }
 }
 

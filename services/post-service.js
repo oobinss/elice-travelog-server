@@ -43,6 +43,16 @@ class PostService {
     const deletedPost = await this.postModel.delete({ postId });
     return 'OK';
   }
+
+  async getPostsByUserId(userId) {
+    const posts = await this.postModel.findByUserId(userId);
+    return posts;
+  }
+
+  async getPostsByCreate(type) {
+    const posts = await this.postModel.findByCreate(type);
+    return posts;
+  }
 }
 const postService = new PostService(postModel);
 

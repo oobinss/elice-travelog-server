@@ -1,16 +1,10 @@
 import { bookmarkService, postService } from '../services/index.js';
-import is from '@sindresorhus/is';
+import * as tools from '../utils/exception-tools.js';
 
 const addBookmark = async (req, res, next) => {
   try {
-    // Content-Type: application/json 설정을 안 한 경우, 에러를 만들도록 함.
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      return res.status(400).send({
-        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
-      });
-    }
-    //   console.log(req.user);
+    tools.isHeaderJSON(req.body);
+
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const {
       bookmarkName,
@@ -54,15 +48,9 @@ const addBookmark = async (req, res, next) => {
 
 const addBookmarks = async (req, res, next) => {
   try {
-    // Content-Type: application/json 설정을 안 한 경우, 에러를 만들도록 함.
-    // application/json 설정을 프론트에서 안 하면, body가 비어 있게 됨.
-    if (is.emptyObject(req.body)) {
-      return res.status(400).send({
-        error: 'headers의 Content-Type을 application/json으로 설정해주세요',
-      });
-    }
-    //   console.log(req.user);
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    tools.isHeaderJSON(req.body);
+
+    const userId = req.user.id;
     const bookmarkName = req.body.bookmarkName;
     const inputArray = req.body.data;
 
@@ -80,7 +68,7 @@ const addBookmarks = async (req, res, next) => {
 
 const getBookmarkName = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const folders = await bookmarkService.getBookmarkFolders(userId);
     res.status(201).json(folders);
   } catch (error) {
@@ -90,7 +78,7 @@ const getBookmarkName = async (req, res, next) => {
 
 const getBookmarksByFolder = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarkName = req.params.folderName;
     const bookmarks = await bookmarkService.getBookmarksByFolder(
       userId,
@@ -104,7 +92,7 @@ const getBookmarksByFolder = async (req, res, next) => {
 
 const getBookmarksByUser = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarks = await bookmarkService.getBookmarksByUserId(userId);
     res.status(201).json(bookmarks);
   } catch (error) {
@@ -114,7 +102,7 @@ const getBookmarksByUser = async (req, res, next) => {
 
 const delFolder = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarkName = req.params.folderName;
 
     const bookmarks = await bookmarkService.delFolder(userId, bookmarkName);
@@ -126,11 +114,10 @@ const delFolder = async (req, res, next) => {
 
 const delBookmarks = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
-    const bookmarkIds = req.body.data;
+    const bookmarkId = req.body.id;
 
-    const cnt = await bookmarkService.delBookmarks(userId, bookmarkIds);
-    res.status(201).json(cnt);
+    const count = await bookmarkService.delBookmark(bookmarkId);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
@@ -138,15 +125,15 @@ const delBookmarks = async (req, res, next) => {
 
 const updateFolderName = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const { bookmarkName, newBookmarkName } = req.body;
 
-    const cnt = await bookmarkService.updateFolderName(
+    const count = await bookmarkService.updateFolderName(
       userId,
       bookmarkName,
       newBookmarkName
     );
-    res.status(201).json(cnt);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
@@ -154,15 +141,15 @@ const updateFolderName = async (req, res, next) => {
 
 const updateBookmarkMemo = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const { id, bookmarkMemo } = req.body;
 
-    const cnt = await bookmarkService.updateBookmarkMemo(
+    const count = await bookmarkService.updateBookmarkMemo(
       userId,
       id,
       bookmarkMemo
     );
-    res.status(201).json(cnt);
+    res.status(201).json(count);
   } catch (error) {
     console.log(error);
   }
