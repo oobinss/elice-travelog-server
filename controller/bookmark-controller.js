@@ -5,7 +5,6 @@ const addBookmark = async (req, res, next) => {
   try {
     tools.isHeaderJSON(req.body);
 
-    //   console.log(req.user);
     const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const {
       bookmarkName,
@@ -51,8 +50,7 @@ const addBookmarks = async (req, res, next) => {
   try {
     tools.isHeaderJSON(req.body);
 
-    //   console.log(req.user);
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarkName = req.body.bookmarkName;
     const inputArray = req.body.data;
 
@@ -70,7 +68,7 @@ const addBookmarks = async (req, res, next) => {
 
 const getBookmarkName = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const folders = await bookmarkService.getBookmarkFolders(userId);
     res.status(201).json(folders);
   } catch (error) {
@@ -80,7 +78,7 @@ const getBookmarkName = async (req, res, next) => {
 
 const getBookmarksByFolder = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarkName = req.params.folderName;
     const bookmarks = await bookmarkService.getBookmarksByFolder(
       userId,
@@ -94,7 +92,7 @@ const getBookmarksByFolder = async (req, res, next) => {
 
 const getBookmarksByUser = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarks = await bookmarkService.getBookmarksByUserId(userId);
     res.status(201).json(bookmarks);
   } catch (error) {
@@ -104,7 +102,7 @@ const getBookmarksByUser = async (req, res, next) => {
 
 const delFolder = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const bookmarkName = req.params.folderName;
 
     const bookmarks = await bookmarkService.delFolder(userId, bookmarkName);
@@ -127,7 +125,7 @@ const delBookmarks = async (req, res, next) => {
 
 const updateFolderName = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const { bookmarkName, newBookmarkName } = req.body;
 
     const count = await bookmarkService.updateFolderName(
@@ -143,7 +141,7 @@ const updateFolderName = async (req, res, next) => {
 
 const updateBookmarkMemo = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const { id, bookmarkMemo } = req.body;
 
     const count = await bookmarkService.updateBookmarkMemo(

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as commentController from '../controller/comment-controller.js';
-// import { commentService } from '../services/index.js';
 import passport from 'passport';
 import auth from '../middlewares/auth.js';
 

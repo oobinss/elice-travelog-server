@@ -25,18 +25,6 @@ export class CommentModel {
     const comments = await prisma.Comment.findMany({
       where: { postId: postId },
       include: {
-        // TODO: user-comment 테이블의 FK제거 후 하단 코드 이용 가능?
-        // Post: {
-        //   select: {
-        //     User: {
-        //       select: {
-        //         nickname: true,
-        //         profileImg: true,
-        //       },
-        //     },
-        //   },
-        // },
-
         User: {
           select: {
             nickname: true,
