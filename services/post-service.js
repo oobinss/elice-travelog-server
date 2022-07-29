@@ -41,6 +41,9 @@ class PostService {
 
   async delPost(postId) {
     const deletedPost = await this.postModel.delete({ postId });
+    if (!deletedPost) {
+      return '해당글의 작성자만 삭제 가능합니다.';
+    }
     return 'OK';
   }
 
