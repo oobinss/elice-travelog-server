@@ -27,11 +27,15 @@ const userLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const token = await userService.getUserToken(res, email, password);
+    const { token, userId } = await userService.getUserToken(
+      res,
+      email,
+      password
+    );
 
     // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
     // res.status(200).json({ userId, token });
-    res.status(200).json({ token });
+    res.status(200).json({ token, userId });
   } catch (error) {
     console.log(error);
   }
@@ -55,8 +59,8 @@ const userPasswordCheck = async (req, res, next) => {
 const socialLoginToken = async (req, res) => {
   try {
     const userEmail = String(req.body.data.data.id);
-    const token = await userService.getUserTokenByEmail(userEmail);
-    res.status(200).json({ token });
+    const { token, userId } = await userService.getUserTokenByEmail(userEmail);
+    res.status(200).json({ token, userId });
   } catch (error) {
     console.log(error);
   }
