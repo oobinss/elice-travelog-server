@@ -73,7 +73,7 @@ class UserService {
     const token = jwt.sign({ userId: user.id, role: user.role }, secretKey);
     // const token = jwt.sign({ userId: user.email }, secretKey);
 
-    return token;
+    return { token, userId: user.id };
   }
 
   // 비밀번호 체크
@@ -258,14 +258,13 @@ class UserService {
       await this.addSocialUser(kakaoId);
       user = await this.userModel.findByEmail(kakaoId);
     }
-
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
 
     // 2개 프로퍼티를 jwt 토큰에 담음
     const token = jwt.sign({ userId: user.id, role: user.role }, secretKey);
 
-    return token;
+    return { token, userId: user.id };
   }
 
   async addSocialUser(kakaoToken) {
