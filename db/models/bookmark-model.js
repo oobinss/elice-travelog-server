@@ -55,7 +55,6 @@ export class BookmarkModel {
   async deleteById({ bookmarkId }) {
     const count = await prisma.Bookmark.delete({
       where: {
-        // AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
         id: bookmarkId,
       },
     });

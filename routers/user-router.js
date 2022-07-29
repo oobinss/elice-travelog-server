@@ -2,98 +2,23 @@ import { Router } from 'express';
 import * as tools from '../utils/exception-tools.js';
 import passport from 'passport';
 import { userService } from '../services/index.js';
-import jwt from 'jsonwebtoken';
 import auth from '../middlewares/auth.js';
 
 import * as userController from '../controller/user-controller.js';
 
 const userRouter = Router();
 
-/**
- * @swagger
- *  /api/users/register:
- *    post:
- *      tags:
- *      - user
- *      description: 유저 등록
- *      produces:
- *      - application/json
- *      requestBody:
- *        content:
- *          application/x-www-form-urlencoded:
- *            schema:
- *              $ref: 'swagger/user.yaml#/components/schemas/User'
- *      responses:
- *       '200':
- *          description: 유저 등록 성공
- */
+// 유저 등록
 userRouter.post('/register', async (req, res, next) => {
   userController.addUser(req, res, next);
 });
 
-/**
- * @swagger
- *  /api/users:
- *    post:
- *      tags:
- *      - user
- *      description: 유저 로그인 (토큰 발급)
- *      produces:
- *      - application/json
- *      requestBody:
- *        content:
- *          application/x-www-form-urlencoded:
- *            schema:
- *              $ref: 'swagger/user.yaml#/components/schemas/User'
- *      responses:
- *       '200':
- *          description: 유저 로그인 성공
- */
+// 유저 로그인
 userRouter.post('/', async function (req, res, next) {
   userController.userLogin(req, res, next);
 });
-/*
-// passport.js LocalStrategy 사용하는 경우 (+session), 현재 사용하진 않으나 기록용으로 두는 중, 프로젝트 업로드시 삭제
-userRouter.post(
-  '/',
-  passport.authenticate('local'),
-  async function (req, res, next) {
-    try {
-      // 로그인 성공 -> JWT 웹 토큰 생성
-      const secretKey = process.env.JWT_SECRET_KEY || 'secret-key';
 
-      // 2개 프로퍼티를 jwt 토큰에 담음 (이메일과 이메일서명)
-      const userId = req.user.email;
-      const token = jwt.sign({ userId: userId }, secretKey);
-
-      // 로그인 진행 성공시 userId(문자열) 와 jwt 토큰(문자열)을 프론트에 보냄
-      // res.status(200).json({ userId, token });
-      res.status(200).json({ token });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
-*/
-
-/**
- * @swagger
- *  /api/users:
- *    post:
- *      tags:
- *      - user
- *      description: 비밀번호 체크
- *      produces:
- *      - application/json
- *      requestBody:
- *        content:
- *          application/x-www-form-urlencoded:
- *            schema:
- *              $ref: 'swagger/user.yaml#/components/schemas/User'
- *      responses:
- *       '200':
- *          description: 유저 로그인 성공
- */
+// 비밀번호 체크
 userRouter.post(
   '/user/check',
   passport.authenticate('jwt', { session: false }),
@@ -102,57 +27,14 @@ userRouter.post(
   }
 );
 
-/**
- * @swagger
- *  /api/users/kakao:
- *    get:
- *      tags:
- *      - user
- *      description: kakao 소셜 로그인 (토큰받아서 토큰 반환)
- *      produces:
- *      - application/json
- *      responses:
- *       '200':
- *          description: 유저 소셜 로그인
- */
-
-// userRouter.get('/kakao', passport.authenticate('kakao'));
-
-//? 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
-// userRouter.get(
-//   '/kakao/callback',
-//   passport.authenticate('kakao', {
-//     failureRedirect: 'http://localhost:3000/login',
-//   }),
-//   (req, res) => {
-//     userController.socialLoginToken(req, res);
-//     res.redirect('http://localhost:3000/');
-//   }
-// );
+// kakao 소셜 로그인
 userRouter.post('/kakao', async function (req, res, next) {
   userController.socialLoginToken(req, res);
 });
 
-/**
- * @swagger
- *  /api/users:
- *    get:
- *      tags:
- *      - user
- *      description: 유저 목록 (배열)
- *      produces:
- *      - application/json
- *      responses:
- *       '200':
- *          description: 유저 목록 조회 성공
- */
-/*
- *          schema:
- *            $ref: './swagger/user.yaml#/components/schemas/User'
- */
+// 유저 목록 (배열)
 userRouter.get(
   '/users',
-  // user jwt-token check
   passport.authenticate('jwt', { session: false }),
   async function (req, res, next) {
     userController.getUsers(req, res, next);
@@ -168,25 +50,7 @@ userRouter.get(
   }
 );
 
-/**
- * @swagger
- *  /api/users/:userId:
- *    patch:
- *      tags:
- *      - user
- *      description: 유저 수정
- *      produces:
- *      - application/json
- *      requestBody:
- *        content:
- *          application/x-www-form-urlencoded:
- *            schema:
- *              $ref: 'swagger/user.yaml#/components/schemas/User'
- *      responses:
- *       '200':
- *          description: 유저 수정 성공
- */
-// (예를 들어 /api/users/abc12345 로 요청하면 req.params.userId는 'abc12345' 문자열로 됨)
+// 유저 수정
 userRouter.patch(
   '/:userId',
   passport.authenticate('jwt', { session: false }),
@@ -195,24 +59,7 @@ userRouter.patch(
   }
 );
 
-/**
- * @swagger
- *  /api/users/:userId:
- *    delete:
- *      tags:
- *      - user
- *      description: 유저 삭제(탈퇴)
- *      produces:
- *      - application/json
- *      requestBody:
- *        content:
- *          application/x-www-form-urlencoded:
- *            schema:
- *              $ref: 'swagger/user.yaml#/components/schemas/User'
- *      responses:
- *       '200':
- *          description: 유저 삭제 성공
- */
+// 유저 삭제
 userRouter.delete(
   '/:userId',
   passport.authenticate('jwt', { session: false }),
@@ -222,7 +69,6 @@ userRouter.delete(
 );
 
 // 현재 유저 정보을 가져옴
-// 미들웨어로 loginRequired 를 썼음 (이로써, jwt 토큰이 없으면 사용 불가한 라우팅이 됨)
 userRouter.get(
   '/:userId',
   passport.authenticate('jwt', { session: false }),
@@ -240,7 +86,6 @@ userRouter.get(
 );
 
 // 주문서 작성시 사용자 주소 입력
-// (예를 들어 /api/users/abc12345 로 요청하면 req.params.userId는 'abc12345' 문자열로 됨)
 userRouter.put(
   '/:userId',
   /*loginRequired,*/ async function (req, res, next) {
