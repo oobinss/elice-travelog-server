@@ -5,7 +5,7 @@ const addPost = async (req, res, next) => {
   try {
     tools.isHeaderJSON(req.body);
 
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const {
       title,
       content,
@@ -51,7 +51,7 @@ const getPost = async (req, res, next) => {
 
 const getPostsByUserId = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
 
     const posts = await postService.getPostsByUserId(userId);
     res.status(201).json(posts);
@@ -78,7 +78,6 @@ const updatePostById = async (req, res, next) => {
     const { title, content, mainImg, flagHideYN, markedData, cateCity, tag } =
       req.body;
 
-    // 위 데이터가 undefined가 아니라면, 즉, 프론트에서 업데이트를 위해 보내주었다면, 업데이트용 객체에 삽입함.
     const toUpdate = {
       ...(title && { title }),
       ...(content && { content }),
@@ -89,7 +88,6 @@ const updatePostById = async (req, res, next) => {
       ...(tag && { tag }),
     };
 
-    // 사용자 정보를 업데이트함.
     const updatedPostInfo = await postService.setPost(postId, toUpdate, res);
     res.status(200).json('OK');
   } catch (error) {

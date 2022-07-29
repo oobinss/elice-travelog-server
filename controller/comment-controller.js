@@ -5,7 +5,7 @@ const addComment = async (req, res, next) => {
   try {
     tools.isHeaderJSON(req.body);
 
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const postId = Number(req.params.postId);
     const { content } = req.body;
 
@@ -36,7 +36,6 @@ const getCommentsByPostId = async (req, res, next) => {
 
 const getComments = async (req, res, next) => {
   try {
-    // const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
     const comments = await commentService.getComments();
     res.status(201).json(comments);
   } catch (error) {
@@ -46,7 +45,7 @@ const getComments = async (req, res, next) => {
 
 const delComment = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
+    const userId = req.user.id;
     const commentId = Number(req.params.commentId);
     const comment = await commentService.getCommentById(commentId);
 

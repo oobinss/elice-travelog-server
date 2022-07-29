@@ -3,10 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class BookmarkModel {
-  //   async findAll() {
-  //     const posts = await prisma.Post.findMany();
-  //     return posts;
-  //   }
   async create(bookmarkInfo) {
     const createdNewBookmark = await prisma.Bookmark.create({
       data: bookmarkInfo,
@@ -59,7 +55,6 @@ export class BookmarkModel {
   async deleteById({ bookmarkId }) {
     const count = await prisma.Bookmark.delete({
       where: {
-        // AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
         id: bookmarkId,
       },
     });

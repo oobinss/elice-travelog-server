@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as bookmarkController from '../controller/bookmark-controller.js';
-// import { bookmarkService } from '../services/index.js';
 import passport from 'passport';
 import auth from '../middlewares/auth.js';
 

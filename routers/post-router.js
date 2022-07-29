@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as postController from '../controller/post-controller.js';
-import { postService } from '../services/index.js';
 import passport from 'passport';
 import auth from '../middlewares/auth.js';
 
