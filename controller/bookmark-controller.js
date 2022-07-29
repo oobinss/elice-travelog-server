@@ -116,10 +116,9 @@ const delFolder = async (req, res, next) => {
 
 const delBookmarks = async (req, res, next) => {
   try {
-    const userId = req.user.id; // jwtStrategy에서 토큰을 복호화해 나온 userId로 user찾아옴
-    const bookmarkIds = req.body.data;
+    const bookmarkId = req.body.id;
 
-    const count = await bookmarkService.delBookmarks(userId, bookmarkIds);
+    const count = await bookmarkService.delBookmark(bookmarkId);
     res.status(201).json(count);
   } catch (error) {
     console.log(error);
