@@ -40,10 +40,9 @@ class BookmarkService {
     return 'OK';
   }
 
-  async delBookmarks(userId, bookmarkIds) {
+  async delBookmark(bookmarkId) {
     const count = await this.bookmarkModel.deleteById({
-      userId,
-      bookmarkIds,
+      bookmarkId,
     });
     return count;
   }

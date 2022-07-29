@@ -56,10 +56,11 @@ export class BookmarkModel {
     });
   }
 
-  async deleteById({ userId, bookmarkIds }) {
-    const count = await prisma.Bookmark.deleteMany({
+  async deleteById({ bookmarkId }) {
+    const count = await prisma.Bookmark.delete({
       where: {
-        AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
+        // AND: [{ userId: userId }, { id: { in: bookmarkIds } }],
+        id: bookmarkId,
       },
     });
     return count;
